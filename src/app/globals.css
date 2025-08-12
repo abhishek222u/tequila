@@ -74,11 +74,44 @@
   --background: #000000;
   --foreground: #f9f8fc;
 }
+/* Performance optimizations for smooth animations */
 * {
   transition:
     background-color 0.4s ease,
     color 0.4s ease,
     border-color 0.4s ease;
+  /* Add performance optimizations */
+  box-sizing: border-box;
+}
+
+/* Enhanced performance for animated elements */
+.animate,
+.hero-text-line-container,
+.testimonial-slide,
+.stats-slide-left,
+.stats-slide-right {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Optimize GPU acceleration for smooth animations */
+.gpu-accelerated {
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* Smooth scrolling optimizations */
+html {
+  scroll-behavior: smooth;
+  /* Optimize for smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 100px;
 }
 
 body {
@@ -91,6 +124,12 @@ body {
     background-color 0.4s ease,
     color 0.4s ease;
   @apply antialiased;
+  /* Performance optimizations */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent layout shifts during animations */
+  overflow-x: hidden;
 }
 
 /* PPNeue Montreal */
@@ -260,7 +299,7 @@ button.tq__button,
   text-align: center !important;
   /* Debug: Add a distinctive style to see if this is working */
   min-height: 38px !important;
-  min-width: 150px !important;
+  min-width: 180px !important;
   
   /* Modern button enhancements */
   will-change: transform, box-shadow, border-color;
@@ -646,3 +685,144 @@ html {
   padding: 5px 12px;
   display: inline-block;
 } */
+
+/* Enhanced testimonial slider performance */
+.testimonial-slider-container {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  /* Performance optimizations */
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+.testimonial-slider {
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  /* GPU acceleration */
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.testimonial-slide {
+  flex-shrink: 0;
+  will-change: transform, opacity, filter;
+  /* Performance optimizations */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  /* Smooth transitions */
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonial-slide video {
+  pointer-events: none;
+  /* Video performance optimizations */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Enhanced progress bar performance */
+.testimonial-slider-container .progress-bar {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: width;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Optimized navigation buttons */
+.testimonial-slider-container .nav-button {
+  will-change: transform, background-color, box-shadow;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced slide indicators */
+.testimonial-slider-container .slide-indicator {
+  will-change: transform, opacity, background-color;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Video modal performance optimizations */
+.video-modal-content {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Enhanced FAQ hover effects */
+.faq-item {
+  will-change: transform, background-color, color;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Optimized button animations */
+.tq__button {
+  will-change: transform, box-shadow, border-color, background-color;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Enhanced scroll reveal performance */
+.scroll-reveal-element {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Optimized Three.js canvas performance */
+.three-canvas {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Enhanced loading states */
+.loading-element {
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Optimized image and video performance */
+img, video {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Enhanced container animations */
+.animated-container {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}

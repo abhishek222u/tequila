@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -24,8 +24,10 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
 }) => {
   const textRef = useRef<HTMLSpanElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<gsap.core.Timeline | null>(null);
 
-  useEffect(() => {
+  // Optimized animation setup with useCallback
+  const setupAnimation = useCallback(() => {
     if (!textRef.current || !containerRef.current) return;
 
     const element = textRef.current;
@@ -40,102 +42,120 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
     // Get all character spans
     const charSpans = element.querySelectorAll('.char');
 
-    // Set initial state with sophisticated positioning
+    // Set initial state with optimized positioning
     gsap.set(charSpans, {
-      y: '120%',
+      y: '100%',
       opacity: 0,
-      rotationX: 90,
-      scale: 0.8,
-      filter: 'blur(4px)',
-      color: '#6b7280'
+      rotationX: 60,
+      scale: 0.85,
+      filter: 'blur(3px)',
+      color: '#6b7280',
+      transformOrigin: 'center center'
     });
 
     // Set initial container state
     gsap.set(container, {
       opacity: 0,
-      y: 30,
-      scale: 0.95
+      y: 20,
+      scale: 0.98
     });
 
-    // Create the main animation timeline
+    // Create the main animation timeline with better performance
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: container,
-        start: 'top 85%',
-        end: 'bottom 15%',
+        start: 'top 90%',
+        end: 'bottom 10%',
         toggleActions: 'play none none reverse',
         onEnter: () => {
-          // Animate container first
-          gsap.to(container, {
+          // Kill any existing animations for better performance
+          if (animationRef.current) {
+            animationRef.current.kill();
+          }
+
+          // Create new optimized timeline
+          animationRef.current = gsap.timeline({
+            onComplete: () => {
+              // Add subtle floating animation after main animation
+              gsap.to(charSpans, {
+                y: '-1px',
+                duration: 3,
+                ease: 'power1.inOut',
+                stagger: 0.01,
+                yoyo: true,
+                repeat: -1
+              });
+            }
+          });
+
+          // Animate container first with smoother easing
+          animationRef.current.to(container, {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.8,
-            ease: 'power3.out',
+            duration: 0.6,
+            ease: 'power2.out',
             delay: delay
           });
 
-          // Animate characters in sequence with advanced effects
-          gsap.to(charSpans, {
+          // Animate characters in sequence with optimized effects
+          animationRef.current.to(charSpans, {
             y: '0%',
             opacity: 1,
             rotationX: 0,
             scale: 1,
             filter: 'blur(0px)',
-            duration: 1.2,
-            ease: 'power3.out',
-            stagger: 0.04,
-            delay: delay + 0.2
-          });
-
-          // Animate color from grey to white with glow effect
-          gsap.to(charSpans, {
-            color: '#ffffff',
-            duration: 1.5,
+            duration: 0.8,
             ease: 'power2.out',
-            delay: delay + 0.4
-          });
+            stagger: 0.03,
+            delay: delay + 0.1
+          }, delay + 0.1);
 
-          // Add subtle floating animation after main animation
-          gsap.to(charSpans, {
-            y: '-2px',
-            duration: 2,
-            ease: 'power1.inOut',
-            stagger: 0.02,
-            delay: delay + 1.5,
-            yoyo: true,
-            repeat: -1
-          });
+          // Animate color from grey to white with smoother transition
+          animationRef.current.to(charSpans, {
+            color: '#ffffff',
+            duration: 1.2,
+            ease: 'power1.out',
+            delay: delay + 0.3
+          }, delay + 0.3);
         },
         onLeave: () => {
-          // Smooth exit animation
+          // Smooth exit animation with better performance
+          if (animationRef.current) {
+            animationRef.current.kill();
+          }
+          
           gsap.to(charSpans, {
-            y: '-80px',
+            y: '-60px',
             opacity: 0,
-            rotationX: -45,
+            rotationX: -30,
             scale: 0.9,
             filter: 'blur(2px)',
-            duration: 0.8,
-            ease: 'power3.in',
-            stagger: 0.02
+            duration: 0.6,
+            ease: 'power2.in',
+            stagger: 0.015
           });
           
           gsap.to(container, {
             opacity: 0,
-            y: -20,
+            y: -15,
             scale: 0.98,
-            duration: 0.6,
-            ease: 'power3.in'
+            duration: 0.5,
+            ease: 'power2.in'
           });
         },
         onEnterBack: () => {
           // Re-animate when entering viewport again
+          if (animationRef.current) {
+            animationRef.current.kill();
+          }
+
           gsap.to(container, {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.6,
-            ease: 'power3.out'
+            duration: 0.5,
+            ease: 'power2.out'
           });
 
           gsap.to(charSpans, {
@@ -145,51 +165,55 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
             scale: 1,
             filter: 'blur(0px)',
             color: '#ffffff',
-            duration: 1,
-            ease: 'power3.out',
-            stagger: 0.03
+            duration: 0.8,
+            ease: 'power2.out',
+            stagger: 0.02
           });
         },
         onLeaveBack: () => {
           // Reverse animation when leaving viewport backwards
+          if (animationRef.current) {
+            animationRef.current.kill();
+          }
+          
           gsap.to(charSpans, {
-            y: '80px',
+            y: '60px',
             opacity: 0,
-            rotationX: 45,
+            rotationX: 30,
             scale: 0.9,
             filter: 'blur(2px)',
-            duration: 0.6,
-            ease: 'power3.in',
-            stagger: 0.02
+            duration: 0.5,
+            ease: 'power2.in',
+            stagger: 0.015
           });
           
           gsap.to(container, {
             opacity: 0,
-            y: 20,
+            y: 15,
             scale: 0.98,
-            duration: 0.5,
-            ease: 'power3.in'
+            duration: 0.4,
+            ease: 'power2.in'
           });
         }
       }
     });
 
-    // Add hover effects for interactive feel
+    // Add optimized hover effects for interactive feel
     const handleMouseEnter = () => {
       gsap.to(charSpans, {
-        scale: 1.05,
-        duration: 0.3,
-        ease: 'power2.out',
-        stagger: 0.01
+        scale: 1.03,
+        duration: 0.2,
+        ease: 'power1.out',
+        stagger: 0.005
       });
     };
 
     const handleMouseLeave = () => {
       gsap.to(charSpans, {
         scale: 1,
-        duration: 0.3,
-        ease: 'power2.out',
-        stagger: 0.01
+        duration: 0.2,
+        ease: 'power1.out',
+        stagger: 0.005
       });
     };
 
@@ -199,11 +223,18 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
     // Cleanup function
     return () => {
       tl.kill();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      if (animationRef.current) {
+        animationRef.current.kill();
+      }
       container.removeEventListener('mouseenter', handleMouseEnter);
       container.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [text, delay, index]);
+
+  useEffect(() => {
+    const cleanup = setupAnimation();
+    return cleanup;
+  }, [setupAnimation]);
 
   return (
     <div 
@@ -213,17 +244,18 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
         display: 'block',
         position: 'relative',
         overflow: 'hidden',
-        cursor: 'default'
+        cursor: 'default',
+        willChange: 'transform, opacity'
       }}
     >
       <span 
         ref={textRef} 
         className="hero-text-line inline-block"
         style={{ 
-          // lineHeight: '1.2',
           position: 'relative',
           transformStyle: 'preserve-3d',
-          backfaceVisibility: 'hidden'
+          backfaceVisibility: 'hidden',
+          willChange: 'transform'
         }}
       />
     </div>

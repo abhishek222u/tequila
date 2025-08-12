@@ -1,15 +1,51 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import Link from 'next/link'
+import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 const Footer = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const footerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      }
+    );
+
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+
+    return () => {
+      if (footerRef.current) {
+        observer.unobserve(footerRef.current);
+      }
+    };
+  }, []);
 
   return (
-    <footer className="py-[100px] w-full bg-[var(--background)]">
-      <div className="container mx-auto flex items-start justify-between gap-[100px] py-[36px]">
-        <div className="w-[20%]">
+    <footer
+      ref={footerRef}
+      className={`py-[100px] w-full bg-[var(--background)] transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
+        }`}
+    >
+      <div
+        className={`container mx-auto flex items-start justify-between gap-[100px] py-[36px] transition-all duration-1000 delay-200 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+      >
+        <div
+          className={`w-[20%] transition-all duration-1000 delay-300 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+            }`}
+        >
           <Link href="/" className="inline-block mb-[24px]">
             <svg
               width="167"
@@ -76,42 +112,49 @@ const Footer = () => {
             A904, Tamani Arts, Business <br />
             Bay, Downtown Dubai, UAE
           </p>
-          <h4 className="tq__Instrument_22 mb-[14px] opacity-70">Lots to talk? Then call us!</h4>
+          <h4 className="tq__Instrument_22 mb-[14px] opacity-70">
+            Lots to talk? Then call us!
+          </h4>
           <p className="tq__FoundersGrotesk_36 mb-[48px]">+971 50 937 2493</p>
         </div>
-        <div className="flex justify-center gap-[48px] w-[60%]">
+        <div
+          className={`flex justify-center gap-[48px] w-[60%] transition-all duration-1000 delay-400 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+            }`}
+        >
           <div className="w-4/12">
             <p className="tq__FoundersGrotesk_14 mb-[24px] uppercase relative z-1 after:content-[''] after:absolute after:left-0 after:top-0 after:h-[1px] after:w-full after:bg-[var(--foreground)] after:translate-y-[6px] after:-z-1">
               <span className="bg-[var(--background)] pr-2">Teq</span>
             </p>
-            <h4 className="tq__Instrument_22 mb-[32px] uppercase">Web Design & Development</h4>
+            <h4 className="tq__Instrument_22 mb-[32px] uppercase">
+              Web Design & Development
+            </h4>
             <div className="space-y-[10px]">
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-5 hover:opacity-100 transition-all duration-700"
               >
                 Custom Website Design & Development
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 E-commerce Website Design & Development
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Web Applications Design & Development
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Domain & Hosting Management
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Website Maintenance & Support
@@ -125,43 +168,43 @@ const Footer = () => {
             <h4 className="tq__Instrument_22 mb-[32px] uppercase">Branding</h4>
             <div className="space-y-[10px]">
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Logo Design & Visual Identity
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Rebranding
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Brand Elevation
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Graphic Design
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Branding, Strategy & Development
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Corporate Profile & Company Brochure
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 UI/ UX Design for Digital Products
@@ -172,28 +215,30 @@ const Footer = () => {
             <p className="tq__FoundersGrotesk_14 mb-[24px] uppercase relative z-1 after:content-[''] after:absolute after:left-0 after:top-0 after:h-[1px] after:w-full after:bg-[var(--foreground)] after:translate-y-[6px] after:-z-1">
               <span className="bg-[var(--background)] pr-2">LA</span>
             </p>
-            <h4 className="tq__Instrument_22 mb-[32px] uppercase">Communication</h4>
+            <h4 className="tq__Instrument_22 mb-[32px] uppercase">
+              Communication
+            </h4>
             <div className="space-y-[10px]">
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Social Media Strategy & Design
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Search Engine Optimisation (SEO)
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Photography & Visual Storytelling
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Video Storyboarding & Production
@@ -201,48 +246,53 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center gap-[48px] w-[20%]">
+        <div
+          className={`flex justify-center gap-[48px] w-[20%] transition-all duration-1000 delay-500 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+            }`}
+        >
           <div className="w-1/2">
-            <h4 className="tq__Instrument_22 mb-[32px] uppercase">Quick links</h4>
+            <h4 className="tq__Instrument_22 mb-[32px] uppercase">
+              Quick links
+            </h4>
             <div className="space-y-[10px]">
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Home
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Cases
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Services
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Culture
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Blog
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 FAQs
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Contact
@@ -253,19 +303,19 @@ const Footer = () => {
             <h4 className="tq__Instrument_22 mb-[32px] uppercase">Socials</h4>
             <div className="space-y-[10px]">
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Instagram
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Linkedin
               </Link>
               <Link
-                href={'#'}
+                href={"#"}
                 className="tq__FoundersGrotesk_14 block opacity-50 hover:opacity-100 transition-all duration-700"
               >
                 Facebook
@@ -274,16 +324,19 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="container mx-auto flex items-start justify-between gap-[100px]">
+      <div
+        className={`container mx-auto flex items-start justify-between gap-[100px] transition-all duration-1000 delay-600 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+      >
         <div>
           <Link
-            href={'#'}
+            href={"#"}
             className="tq__FoundersGrotesk_14 uppercase mr-[48px] opacity-70 hover:opacity-100 transition-all duration-700"
           >
             @tequila.ae
           </Link>
           <Link
-            href={'#'}
+            href={"#"}
             className="tq__FoundersGrotesk_14 uppercase opacity-70 hover:opacity-100 transition-all duration-700"
           >
             cookies
@@ -294,7 +347,7 @@ const Footer = () => {
         </p>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

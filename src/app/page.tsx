@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -76,70 +76,60 @@ export default function Home() {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
   const sliderRef = useRef<HTMLDivElement>(null)
+  const animationTimelineRef = useRef<gsap.core.Timeline | null>(null)
 
   const totalSlides = 3
+
+  // Optimized slide transition function
+  const animateSlideTransition = useCallback((fromSlide: number, toSlide: number, newPosition: number) => {
+    // Kill any existing animations for better performance
+    if (animationTimelineRef.current) {
+      animationTimelineRef.current.kill();
+    }
+
+    // Create new optimized timeline
+    animationTimelineRef.current = gsap.timeline({
+      onComplete: () => {
+        setScrollPosition(newPosition);
+        setCurrentSlide(toSlide);
+      }
+    });
+
+    // Animate current slide out with smoother easing
+    animationTimelineRef.current.to(`[data-slide="${fromSlide}"]`, {
+      opacity: 0.4,
+      scale: 0.96,
+      duration: 0.5,
+      ease: "power2.out"
+    });
+
+    // Animate new slide in with better timing
+    animationTimelineRef.current.to(`[data-slide="${toSlide}"]`, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.5,
+      delay: 0.1,
+      ease: "power2.out"
+    }, 0.1);
+
+    // Smooth slide transition with better easing
+    animationTimelineRef.current.to(sliderRef.current, {
+      x: newPosition,
+      duration: 1.0,
+      ease: "power2.out"
+    }, 0);
+  }, []);
 
   const scrollLeft = () => {
     if (currentSlide > 0) {
       const newSlide = currentSlide - 1
       const newPosition = scrollPosition + getSlideWidth()
-
-      // Animate current slide out
-      gsap.to(`[data-slide="${currentSlide}"]`, {
-        opacity: 0.3,
-        scale: 0.95,
-        duration: 0.4,
-        ease: "power2.out"
-      })
-
-      // Animate new slide in
-      gsap.to(`[data-slide="${newSlide}"]`, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.4,
-        delay: 0.2,
-        ease: "power2.out"
-      })
-
-      // Smooth slide transition
-      gsap.to(sliderRef.current, {
-        x: newPosition,
-        duration: 1.2,
-        ease: "power3.out"
-      })
-
-      setScrollPosition(newPosition)
-      setCurrentSlide(newSlide)
+      animateSlideTransition(currentSlide, newSlide, newPosition);
     } else {
       // Loop to last slide with smooth transition
       const lastSlide = totalSlides - 1
       const newPosition = -(lastSlide * getSlideWidth())
-
-      // Animate current slide out
-      gsap.to(`[data-slide="${currentSlide}"]`, {
-        opacity: 0.3,
-        scale: 0.95,
-        duration: 0.4,
-        ease: "power2.out"
-      })
-
-      // Animate last slide in
-      gsap.to(`[data-slide="${lastSlide}"]`, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.4,
-        delay: 0.2,
-        ease: "power2.out"
-      })
-
-      gsap.to(sliderRef.current, {
-        x: newPosition,
-        duration: 1.5,
-        ease: "power4.out"
-      })
-
-      setScrollPosition(newPosition)
-      setCurrentSlide(lastSlide)
+      animateSlideTransition(currentSlide, lastSlide, newPosition);
     }
   }
 
@@ -147,62 +137,11 @@ export default function Home() {
     if (currentSlide < totalSlides - 1) {
       const newSlide = currentSlide + 1
       const newPosition = scrollPosition - getSlideWidth()
-
-      // Animate current slide out
-      gsap.to(`[data-slide="${currentSlide}"]`, {
-        opacity: 0.3,
-        scale: 0.95,
-        duration: 0.4,
-        ease: "power2.out"
-      })
-
-      // Animate new slide in
-      gsap.to(`[data-slide="${newSlide}"]`, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.4,
-        delay: 0.2,
-        ease: "power2.out"
-      })
-
-      // Smooth slide transition
-      gsap.to(sliderRef.current, {
-        x: newPosition,
-        duration: 1.2,
-        ease: "power3.out"
-      })
-
-      setScrollPosition(newPosition)
-      setCurrentSlide(newSlide)
+      animateSlideTransition(currentSlide, newSlide, newPosition);
     } else {
       // Loop back to first slide with smooth transition
       const newPosition = 0
-
-      // Animate current slide out
-      gsap.to(`[data-slide="${currentSlide}"]`, {
-        opacity: 0.3,
-        scale: 0.95,
-        duration: 0.4,
-        ease: "power2.out"
-      })
-
-      // Animate first slide in
-      gsap.to(`[data-slide="0"]`, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.4,
-        delay: 0.2,
-        ease: "power2.out"
-      })
-
-      gsap.to(sliderRef.current, {
-        x: newPosition,
-        duration: 1.5,
-        ease: "power4.out"
-      })
-
-      setScrollPosition(newPosition)
-      setCurrentSlide(0)
+      animateSlideTransition(currentSlide, 0, newPosition);
     }
   }
 
@@ -223,16 +162,37 @@ export default function Home() {
     // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden'
 
-    // Simple animation without GSAP for now
-    console.log('Modal should be open now')
+    // Enhanced modal animation
+    gsap.fromTo('.video-modal-content', {
+      opacity: 0,
+      scale: 0.8,
+      y: 50
+    }, {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out"
+    });
   }
 
   const closeVideoPreview = () => {
     console.log('Closing video preview')
-    setIsVideoModalOpen(false)
-    setSelectedVideo(null)
-    // Restore body scroll
-    document.body.style.overflow = 'unset'
+    
+    // Enhanced close animation
+    gsap.to('.video-modal-content', {
+      opacity: 0,
+      scale: 0.8,
+      y: 50,
+      duration: 0.4,
+      ease: "power2.in",
+      onComplete: () => {
+        setIsVideoModalOpen(false)
+        setSelectedVideo(null)
+        // Restore body scroll
+        document.body.style.overflow = 'unset'
+      }
+    });
   }
 
   // Reset scroll position when component unmounts
@@ -240,28 +200,36 @@ export default function Home() {
     return () => {
       setScrollPosition(0)
       setCurrentSlide(0)
+      if (animationTimelineRef.current) {
+        animationTimelineRef.current.kill();
+      }
     }
   }, [])
 
-  // Add smooth entrance animations for slides
+  // Add smooth entrance animations for slides with better performance
   useEffect(() => {
     if (sliderRef.current) {
-      // Animate all slides in with staggered delay
+      // Kill any existing animations
+      gsap.killTweensOf('.testimonial-slide');
+      
+      // Animate all slides in with staggered delay and better easing
       gsap.fromTo(
         '.testimonial-slide',
         {
           opacity: 0,
-          y: 50,
-          scale: 0.9
+          y: 60,
+          scale: 0.9,
+          filter: 'blur(3px)'
         },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 1,
-          stagger: 0.2,
-          ease: "power3.out",
-          delay: 0.5
+          filter: 'blur(0px)',
+          duration: 1.2,
+          stagger: 0.15,
+          ease: "power2.out",
+          delay: 0.3
         }
       )
     }
@@ -286,24 +254,29 @@ export default function Home() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentSlide, scrollPosition, isVideoModalOpen])
+  }, [currentSlide, scrollPosition, isVideoModalOpen, scrollLeft, scrollRight, closeVideoPreview])
 
-  // Touch/swipe support for mobile
+  // Touch/swipe support for mobile with better performance
   useEffect(() => {
     if (!sliderRef.current) return
 
     let startX = 0
     let currentX = 0
+    let isSwiping = false
 
     const handleTouchStart = (e: TouchEvent) => {
       startX = e.touches[0].clientX
+      isSwiping = true
     }
 
     const handleTouchMove = (e: TouchEvent) => {
+      if (!isSwiping) return
       currentX = e.touches[0].clientX
     }
 
     const handleTouchEnd = () => {
+      if (!isSwiping) return
+      
       const diff = startX - currentX
       const threshold = 50
 
@@ -314,19 +287,21 @@ export default function Home() {
           scrollLeft()
         }
       }
+      
+      isSwiping = false
     }
 
     const slider = sliderRef.current
-    slider.addEventListener('touchstart', handleTouchStart)
-    slider.addEventListener('touchmove', handleTouchMove)
-    slider.addEventListener('touchend', handleTouchEnd)
+    slider.addEventListener('touchstart', handleTouchStart, { passive: true })
+    slider.addEventListener('touchmove', handleTouchMove, { passive: true })
+    slider.addEventListener('touchend', handleTouchEnd, { passive: true })
 
     return () => {
       slider.removeEventListener('touchstart', handleTouchStart)
       slider.removeEventListener('touchmove', handleTouchMove)
       slider.removeEventListener('touchend', handleTouchEnd)
     }
-  }, [currentSlide, scrollPosition])
+  }, [scrollLeft, scrollRight])
 
   return (
     <>
@@ -1150,7 +1125,7 @@ export default function Home() {
 
               {/* Modal content */}
               <div
-                className="relative z-10 max-w-4xl w-full max-h-[90vh]"
+                className="relative z-10 max-w-4xl w-full max-h-[90vh] video-modal-content"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Close button */}
