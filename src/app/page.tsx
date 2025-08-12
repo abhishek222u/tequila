@@ -1,19 +1,19 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
-import gsap, { Power3, Power4 } from 'gsap'
+import { useState, useRef, useEffect } from 'react'
+import gsap from 'gsap'
 import ScrollTrigger from 'gsap/dist/ScrollTrigger'
-gsap.registerPlugin(ScrollTrigger)
 import Image from 'next/image'
 import Link from 'next/link'
+gsap.registerPlugin(ScrollTrigger)
 
-import VideoPlayer from '@/component/VideoPlayer'
-import AnimatedHeading from '@/component/TextAnimation'
+
+import AwardsSelection from '@/component/AwardsSelection'
 import Button from '@/component/Button'
+import HeroTextLine from '@/component/HeroTextAnimation'
 import ScrollReveal from '@/component/ScrollReveal'
 import ScrollShaderSlider from '@/component/ScrollShaderSlider'
 import VideoClothAnimation from '@/component/VideoClothAnimation'
-import AwardsSelection from '@/component/AwardsSelection'
 
 import insights1 from '../../public/images/insights1.jpg'
 import insights2 from '../../public/images/insights2.jpg'
@@ -69,6 +69,265 @@ export default function Home() {
       thumbnail: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?w=300&h=200&fit=crop'
     }
   ]
+
+  // Testimonial slider state and functions
+  const [scrollPosition, setScrollPosition] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
+  const sliderRef = useRef<HTMLDivElement>(null)
+
+  const totalSlides = 3
+
+  const scrollLeft = () => {
+    if (currentSlide > 0) {
+      const newSlide = currentSlide - 1
+      const newPosition = scrollPosition + getSlideWidth()
+
+      // Animate current slide out
+      gsap.to(`[data-slide="${currentSlide}"]`, {
+        opacity: 0.3,
+        scale: 0.95,
+        duration: 0.4,
+        ease: "power2.out"
+      })
+
+      // Animate new slide in
+      gsap.to(`[data-slide="${newSlide}"]`, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.4,
+        delay: 0.2,
+        ease: "power2.out"
+      })
+
+      // Smooth slide transition
+      gsap.to(sliderRef.current, {
+        x: newPosition,
+        duration: 1.2,
+        ease: "power3.out"
+      })
+
+      setScrollPosition(newPosition)
+      setCurrentSlide(newSlide)
+    } else {
+      // Loop to last slide with smooth transition
+      const lastSlide = totalSlides - 1
+      const newPosition = -(lastSlide * getSlideWidth())
+
+      // Animate current slide out
+      gsap.to(`[data-slide="${currentSlide}"]`, {
+        opacity: 0.3,
+        scale: 0.95,
+        duration: 0.4,
+        ease: "power2.out"
+      })
+
+      // Animate last slide in
+      gsap.to(`[data-slide="${lastSlide}"]`, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.4,
+        delay: 0.2,
+        ease: "power2.out"
+      })
+
+      gsap.to(sliderRef.current, {
+        x: newPosition,
+        duration: 1.5,
+        ease: "power4.out"
+      })
+
+      setScrollPosition(newPosition)
+      setCurrentSlide(lastSlide)
+    }
+  }
+
+  const scrollRight = () => {
+    if (currentSlide < totalSlides - 1) {
+      const newSlide = currentSlide + 1
+      const newPosition = scrollPosition - getSlideWidth()
+
+      // Animate current slide out
+      gsap.to(`[data-slide="${currentSlide}"]`, {
+        opacity: 0.3,
+        scale: 0.95,
+        duration: 0.4,
+        ease: "power2.out"
+      })
+
+      // Animate new slide in
+      gsap.to(`[data-slide="${newSlide}"]`, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.4,
+        delay: 0.2,
+        ease: "power2.out"
+      })
+
+      // Smooth slide transition
+      gsap.to(sliderRef.current, {
+        x: newPosition,
+        duration: 1.2,
+        ease: "power3.out"
+      })
+
+      setScrollPosition(newPosition)
+      setCurrentSlide(newSlide)
+    } else {
+      // Loop back to first slide with smooth transition
+      const newPosition = 0
+
+      // Animate current slide out
+      gsap.to(`[data-slide="${currentSlide}"]`, {
+        opacity: 0.3,
+        scale: 0.95,
+        duration: 0.4,
+        ease: "power2.out"
+      })
+
+      // Animate first slide in
+      gsap.to(`[data-slide="0"]`, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.4,
+        delay: 0.2,
+        ease: "power2.out"
+      })
+
+      gsap.to(sliderRef.current, {
+        x: newPosition,
+        duration: 1.5,
+        ease: "power4.out"
+      })
+
+      setScrollPosition(newPosition)
+      setCurrentSlide(0)
+    }
+  }
+
+  const getSlideWidth = () => {
+    if (sliderRef.current) {
+      const firstSlide = sliderRef.current.children[0] as HTMLElement
+      if (firstSlide) {
+        return firstSlide.offsetWidth + 24 // 24px is the gap
+      }
+    }
+    return 800 // fallback width
+  }
+
+  const openVideoPreview = (videoSrc: string) => {
+    console.log('Opening video preview:', videoSrc)
+    setSelectedVideo(videoSrc)
+    setIsVideoModalOpen(true)
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden'
+
+    // Simple animation without GSAP for now
+    console.log('Modal should be open now')
+  }
+
+  const closeVideoPreview = () => {
+    console.log('Closing video preview')
+    setIsVideoModalOpen(false)
+    setSelectedVideo(null)
+    // Restore body scroll
+    document.body.style.overflow = 'unset'
+  }
+
+  // Reset scroll position when component unmounts
+  useEffect(() => {
+    return () => {
+      setScrollPosition(0)
+      setCurrentSlide(0)
+    }
+  }, [])
+
+  // Add smooth entrance animations for slides
+  useEffect(() => {
+    if (sliderRef.current) {
+      // Animate all slides in with staggered delay
+      gsap.fromTo(
+        '.testimonial-slide',
+        {
+          opacity: 0,
+          y: 50,
+          scale: 0.9
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          stagger: 0.2,
+          ease: "power3.out",
+          delay: 0.5
+        }
+      )
+    }
+  }, [])
+
+  // Debug video modal state
+  useEffect(() => {
+    console.log('Video modal state:', { isVideoModalOpen, selectedVideo })
+  }, [isVideoModalOpen, selectedVideo])
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        scrollLeft()
+      } else if (e.key === 'ArrowRight') {
+        scrollRight()
+      } else if (e.key === 'Escape' && isVideoModalOpen) {
+        closeVideoPreview()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [currentSlide, scrollPosition, isVideoModalOpen])
+
+  // Touch/swipe support for mobile
+  useEffect(() => {
+    if (!sliderRef.current) return
+
+    let startX = 0
+    let currentX = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].clientX
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      currentX = e.touches[0].clientX
+    }
+
+    const handleTouchEnd = () => {
+      const diff = startX - currentX
+      const threshold = 50
+
+      if (Math.abs(diff) > threshold) {
+        if (diff > 0) {
+          scrollRight()
+        } else {
+          scrollLeft()
+        }
+      }
+    }
+
+    const slider = sliderRef.current
+    slider.addEventListener('touchstart', handleTouchStart)
+    slider.addEventListener('touchmove', handleTouchMove)
+    slider.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      slider.removeEventListener('touchstart', handleTouchStart)
+      slider.removeEventListener('touchmove', handleTouchMove)
+      slider.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [currentSlide, scrollPosition])
+
   return (
     <>
       <main>
@@ -76,15 +335,15 @@ export default function Home() {
           <div className="container flex justify-between m-auto">
             <div className="w-5/12 text-right">
               <h1 className="tq__PPMedium__58 text-left w-full max-w-[800px] ml-auto bg-[var(--background)] p-[50px] -mt-[50px] relative z-1">
-                <span className="block text-right">An Award Winning</span>
-                <span className="block">Branding and Web Design</span>
-                <span className="block">Agency in Dubai.</span>
+                <HeroTextLine text="An Award Winning" className="block text-right" delay={0} index={0} />
+                <HeroTextLine text="Branding and Web Design" className="block" delay={0.2} index={1} />
+                <HeroTextLine text="Agency in Dubai." className="block" delay={0.4} index={2} />
               </h1>
             </div>
             <div className="w-7/12 relative">
               <h2 className="tq__Instrument_36 px-[50px] mb-[32px]">
-                <AnimatedHeading text="Strategic, intentional, and unapologetically bold" />
-                <AnimatedHeading text="Branding and Web Experiences built to lead, <span class='italic'>not follow.</span>" />
+                <HeroTextLine text="Strategic, intentional, and unapologetically bold" className="block" delay={0} index={3} />
+                <HeroTextLine text="Branding and Web Experiences built to lead, not follow" className="block" delay={0.2} index={4} />
               </h2>
               <div className="flex gap-[10px] px-[50px] mb-[50px]">
                 {/* <Link
@@ -101,10 +360,10 @@ export default function Home() {
                   Case Studies
                 </Link> */}
                 <ScrollReveal delay={0.2}>
-                  <Button text={'Get to know us'} extraClasses="" onClick={() => {}} />
+                  <Button text={'Get to know us'} extraClasses="" onClick={() => { }} />
                 </ScrollReveal>
                 <ScrollReveal delay={0.3}>
-                  <Button text={'Case Studies'} extraClasses="" onClick={() => {}} />
+                  <Button text={'Case Studies'} extraClasses="" onClick={() => { }} />
                 </ScrollReveal>
               </div>
               {/* <div className="px-[50px] relative">
@@ -129,15 +388,16 @@ export default function Home() {
         <section className="py-[150px] relative z-1">
           <div className="container flex justify-between m-auto">
             <div className="w-6/12">
-              <h2 className="tq__PPBook__100 mb-[32px]">The Agency</h2>
+              {/* <h2 className="tq__PPBook__100 mb-[32px]">The Agency</h2> */}
+              <HeroTextLine text="The Agency" className="tq__PPBook__100 block text-3xl" delay={0} index={5} />
               <h3 className="tq__Instrument_36 mb-[32px]">
-                <AnimatedHeading text="Strategic, Intentional, and Unapologetically" />
-                <AnimatedHeading text="Bold—Branding and Web Experiences" />
-                <AnimatedHeading text="Built to Lead, Not Follow." />
+                <HeroTextLine text="Strategic, Intentional, and Unapologetically" className="block" delay={0} index={6} />
+                <HeroTextLine text="Bold—Branding and Web Experiences" className="block" delay={0.2} index={7} />
+                <HeroTextLine text="Built to Lead, Not Follow." className="block" delay={0.4} index={8} />
               </h3>
               <div className="max-w-[65%] ml-auto">
                 <ScrollReveal delay={0.2}>
-                  <p className="tq__FoundersGrotesk_22 font-light indent-12 mb-[32px]">
+                  <p className="tq__FoundersGrotesk_22 font-light indent-0 mb-[32px]">
                     A "Creative Intelligence Studio" - an agency that not only designs and builds,
                     but crafts brands with intellect, heart, and future-readiness. Not just
                     aesthetic designs or websites, but strategic experiences.
@@ -165,7 +425,7 @@ export default function Home() {
                   </svg>
                 </Link> */}
                 <ScrollReveal delay={0.3}>
-                  <Button text={'Know More'} extraClasses="" onClick={() => {}} />
+                  <Button text={'Know More'} extraClasses="" onClick={() => { }} />
                 </ScrollReveal>
               </div>
             </div>
@@ -176,25 +436,25 @@ export default function Home() {
                 </p>
               </ScrollReveal>
               <div className="flex justify-between items-start flex-wrap gap-[24px] max-w-[70%] ml-auto">
-                <ScrollReveal delay={0.3} className="w-[calc(50%-12px)] mb-[64px]">
+                <ScrollReveal delay={0.3} className="w-[calc(50%-12px)] mb-[64px] stats-slide-left">
                   <p className="tq__FoundersGrotesk_22 uppercase border-b border-[var(--foreground)]">
                     Years of Experience
                   </p>
                   <h2 className="tq__Instrument_100">25+</h2>
                 </ScrollReveal>
-                <ScrollReveal delay={0.4} className="w-[calc(50%-12px)] mb-[64px]">
+                <ScrollReveal delay={0.4} className="w-[calc(50%-12px)] mb-[64px] stats-slide-left">
                   <p className="tq__FoundersGrotesk_22 uppercase border-b border-[var(--foreground)]">
                     PRojects Delivered
                   </p>
                   <h2 className="tq__Instrument_100">800+</h2>
                 </ScrollReveal>
-                <ScrollReveal delay={0.5} className="w-[calc(50%-12px)] mb-[64px]">
+                <ScrollReveal delay={0.5} className="w-[calc(50%-12px)] mb-[64px] stats-slide-right">
                   <p className="tq__FoundersGrotesk_22 uppercase border-b border-[var(--foreground)]">
                     Client Retention Rate
                   </p>
                   <h2 className="tq__Instrument_100">100%</h2>
                 </ScrollReveal>
-                <ScrollReveal delay={0.6} className="w-[calc(50%-12px)] mb-[64px]">
+                <ScrollReveal delay={0.6} className="w-[calc(50%-12px)] mb-[64px] stats-slide-right">
                   <p className="tq__FoundersGrotesk_22 uppercase border-b border-[var(--foreground)]">
                     Projects Per Year
                   </p>
@@ -207,10 +467,11 @@ export default function Home() {
 
         <section className="py-[150px] relative z-1">
           <div className="container m-auto">
-            <h2 className="tq__PPBook__100 mb-[32px]">What We Do</h2>
+            {/* <h2 className="tq__PPBook__100 mb-[32px]">What We Do</h2> */}
+            <HeroTextLine text="What We Do" className="tq__PPBook__100 block text-3xl" delay={0} index={5} />
             <h3 className="tq__Instrument_36 mb-[64px]">
-              <AnimatedHeading text="Our services are wrapped" />
-              <AnimatedHeading text="around our story, what we stand for!" />
+              <HeroTextLine text="Our services are wrapped" className="block" delay={0} index={9} />
+              <HeroTextLine text="around our story, what we stand for!" className="block" delay={0.2} index={10} />
             </h3>
             <div className="flex justify-between gap-[24px]">
               <ScrollReveal delay={0.2} className="w-full">
@@ -226,6 +487,24 @@ export default function Home() {
                     web interfaces & frameworks
                   </p>
                 </div>
+                {/* <div className="transparent-buttons-block relative">
+                  <img src="assets/images/teq-buttons.png" className="buttons-Bg" alt="" />
+                  <div className="all-buttons-texts">
+                    <div className="rowFirts-div">
+                      <a href="" className="buttons1 row1button1">Custom Website Design & Development</a>
+                      <a href="" className="buttons1 row1button2">Domain & Hosting Management</a>
+                    </div>
+                    <div className="rowFirts2-div">
+                      <a href="" className="buttons1 row2button2">Ecommerce Website Design &
+                        Development</a>
+                    </div>
+                    <div className="rowFirts3-div">
+                      <a href="" className="buttons1 row2button2">Website Maintenance & Support</a>
+                      <a href="" className="buttons1 row2button2">Web Applications Design &
+                        Development</a>
+                    </div>
+                  </div>
+                </div> */}
                 <svg
                   viewBox="0 0 600 206"
                   fill="none"
@@ -302,15 +581,13 @@ export default function Home() {
         <section className="py-[150px]">
           <div className="container flex justify-between items-end m-auto mb-[150px]">
             <div className="w-6/12">
-              <h2 className="tq__PPBook__100">
-                Awards & <br />
-                Accolades
-              </h2>
+              <HeroTextLine text="Awards &" className="tq__PPBook__100 block text-7xl" delay={0} index={29} />
+              <HeroTextLine text="Accolades" className="tq__PPBook__100 block text-7xl" delay={0} index={31} />
             </div>
             <div className="w-6/12">
               <div className="max-w-[65%] ml-auto">
                 <ScrollReveal delay={0.2}>
-                  <p className="tq__FoundersGrotesk_22 font-light indent-12 mb-[32px]">
+                  <p className="tq__FoundersGrotesk_22 font-light indent-0 mb-[32px]">
                     A "Creative Intelligence Studio" - an agency that not only designs and builds,
                     but crafts brands with intellect, heart, and future-readiness. Not just
                     aesthetic designs or websites, but strategic experiences.
@@ -486,14 +763,15 @@ export default function Home() {
         </section>
 
         <section className="py-[150px]">
-          <div className="container flex justify-between items-end m-auto mb-[150px]">
+          <div className="container flex justify-between items-end m-auto mb-[50px]">
             <div className="w-6/12">
-              <h2 className="tq__PPBook__100">Case Studies</h2>
+              {/* <h2 className="tq__PPBook__100">Case Studies</h2> */}
+              <HeroTextLine text="Case Studies" className="tq__PPBook__100 block text-3xl" delay={0} index={33} />
             </div>
             <div className="w-6/12">
               <div className="max-w-[65%] ml-auto">
                 <ScrollReveal delay={0.2}>
-                  <p className="tq__FoundersGrotesk_22 font-light indent-12">
+                  <p className="tq__FoundersGrotesk_22 font-light indent-0">
                     A "Creative Intelligence Studio" - an agency that not only designs and builds,
                     but crafts brands with intellect, heart, and future-readiness. Not just
                     aesthetic designs or websites, but strategic experiences.
@@ -614,109 +892,323 @@ export default function Home() {
         <section className="py-[150px] w-screen overflow-hidden">
           <div className="container flex justify-between items-end m-auto">
             <div className="w-6/12">
-              <h2 className="tq__PPBook__100 mb-[64px]">Testimonials</h2>
+              {/* <h2 className="tq__PPBook__100 mb-[64px]">Testimonials</h2> */}
+              <HeroTextLine text="Testimonials" className="tq__PPBook__100 block text-3xl" delay={0} index={34} />
               <h3 className="tq__Instrument_36 mb-[64px]">
-                <AnimatedHeading text="Don't worry if you can't find your" className="indent-12" />
-                <AnimatedHeading text="question in the list given, ask us directly" />
-                <AnimatedHeading text="we are here for you." />
+                <HeroTextLine text="Don't worry if you can't find your" className="block" delay={0} index={11} />
+                <HeroTextLine text="question in the list given, ask us directly" className="block" delay={0.2} index={12} />
+                <HeroTextLine text="we are here for you." className="block" delay={0.4} index={13} />
               </h3>
             </div>
             <div className="w-6/12"></div>
           </div>
-          <div className="container m-auto">
-            <div className="testimonial-slider flex items-center gap-[24px]">
-              <div className="testimonial-slide flex items-start gap-[24px]">
-                <video
-                  className="h-full mb-[24px]"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  src="/videos/testimonial1.mp4"
-                  style={{ maxWidth: 'inherit', maxHeight: '65vh' }}
-                />
-                <div className="flex items-end p-[64px] border-[0.5px] border-[var(--foreground)] w-[50vh] h-[65vh]">
-                  <div>
-                    <h3 className="tq__Instrument_58 mb-[32px]">
-                      "Exceptional Creativity and Professionalism!"
-                    </h3>
-                    <p className="tq__FoundersGrotesk_22 mb-[32px]">
-                      Working with Team Tequila has been an absolutely incredible experience! From
-                      the very first interaction, it was evident that this team is not just about
-                      delivering web design services—they are brand creators who truly elevate your
-                      imagination.
-                    </p>
-                    <p className="tq__FoundersGrotesk_22 uppercase">Ravi Kotwani</p>
-                    <p className="tq__FoundersGrotesk_22 uppercase opacity-50">CEO, XTASY</p>
+          <div className="container m-auto relative">
+            {/* Progress Bar */}
+            <div className="w-full h-2 bg-[var(--foreground)] opacity-20 mb-8 rounded-full overflow-hidden shadow-inner">
+              <div
+                className="h-full bg-[var(--foreground)] transition-all duration-1000 ease-out rounded-full shadow-lg relative overflow-hidden"
+                style={{ width: `${((currentSlide + 1) / totalSlides) * 100}%` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-pulse" />
+              </div>
+            </div>
+
+            <div className="testimonial-slider-container overflow-hidden relative" role="region" aria-label="Testimonials slider">
+              <div
+                ref={sliderRef}
+                className="testimonial-slider flex items-center gap-[24px] will-change-transform cursor-grab active:cursor-grabbing select-none"
+                style={{ transform: `translateX(${scrollPosition}px)` }}
+                role="list"
+              >
+                <div
+                  className="testimonial-slide flex items-start gap-[24px] min-w-max opacity-90 hover:opacity-100 transition-all duration-500 hover:scale-[1.02]"
+                  role="listitem"
+                  data-slide="0"
+                >
+                  <div className="relative group">
+                    <div
+                      className="w-[60vh] h-[65vh] mb-[24px] rounded-lg shadow-2xl bg-black transform transition-all duration-700 hover:scale-105 cursor-pointer relative overflow-hidden"
+                      onClick={() => {
+                        console.log('Video 1 wrapper clicked!')
+                        openVideoPreview("/videos/testimonial1.mp4")
+                      }}
+                    >
+                      <video
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        src="/videos/testimonial1.mp4"
+                      />
+                      {/* Play button overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
+                        <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-500">
+                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-end p-[64px] border-[0.5px] border-[var(--foreground)] w-[50vh] h-[65vh] rounded-lg backdrop-blur-sm shadow-xl transform transition-all duration-700 hover:shadow-2xl">
+                    <div className="transform transition-all duration-700 hover:translate-y-[-8px]">
+                      <h3 className="tq__Instrument_58 mb-[32px] transform transition-all duration-700 hover:scale-105">
+                        "Exceptional Creativity and Professionalism!"
+                      </h3>
+                      <p className="tq__FoundersGrotesk_22 mb-[32px] transform transition-all duration-700 hover:translate-x-2">
+                        Working with Team Tequila has been an absolutely incredible experience! From
+                        the very first interaction, it was evident that this team is not just about
+                        delivering web design services—they are brand creators who truly elevate your
+                        imagination.
+                      </p>
+                      <p className="tq__FoundersGrotesk_22 uppercase transform transition-all duration-700 hover:scale-105">Ravi Kotwani</p>
+                      <p className="tq__FoundersGrotesk_22 uppercase opacity-50 transform transition-all duration-700 hover:opacity-70">CEO, XTASY</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="testimonial-slide flex items-start gap-[24px]">
-                <video
-                  className="h-full mb-[24px]"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  src="/videos/testimonial1.mp4"
-                  style={{ maxWidth: 'inherit', maxHeight: '65vh' }}
-                />
-                <div className="flex items-end p-[64px] border-[0.5px] border-[var(--foreground)] w-[50vh] h-[65vh]">
-                  <div>
-                    <h3 className="tq__Instrument_58 mb-[32px]">
-                      "Exceptional Creativity and Professionalism!"
-                    </h3>
-                    <p className="tq__FoundersGrotesk_22 mb-[32px]">
-                      Working with Team Tequila has been an absolutely incredible experience! From
-                      the very first interaction, it was evident that this team is not just about
-                      delivering web design services—they are brand creators who truly elevate your
-                      imagination.
-                    </p>
-                    <p className="tq__FoundersGrotesk_22 uppercase">Ravi Kotwani</p>
-                    <p className="tq__FoundersGrotesk_22 uppercase opacity-50">CEO, XTASY</p>
+                <div
+                  className="testimonial-slide flex items-start gap-[24px] min-w-max opacity-90 hover:opacity-100 transition-all duration-500 hover:scale-[1.02]"
+                  role="listitem"
+                  data-slide="1"
+                >
+                  <div className="relative group">
+                    <div
+                      className="w-[60vh] h-[65vh] mb-[24px] rounded-lg shadow-2xl bg-black transform transition-all duration-700 hover:scale-105 cursor-pointer relative overflow-hidden"
+                      onClick={() => {
+                        console.log('Video 2 wrapper clicked!')
+                        openVideoPreview("/videos/testimonial2.mp4")
+                      }}
+                    >
+                      <video
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        src="/videos/testimonial2.mp4"
+                      />
+                      {/* Play button overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
+                        <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-500">
+                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-end p-[64px] border-[0.5px] border-[var(--foreground)] w-[50vh] h-[65vh] rounded-lg backdrop-blur-sm shadow-xl transform transition-all duration-700 hover:shadow-2xl">
+                    <div className="transform transition-all duration-700 hover:translate-y-[-8px]">
+                      <h3 className="tq__FoundersGrotesk_22 mb-[32px] transform transition-all duration-700 hover:scale-105">
+                        "Outstanding Results and Innovation!"
+                      </h3>
+                      <p className="tq__FoundersGrotesk_22 mb-[32px] transform transition-all duration-700 hover:translate-x-2">
+                        The level of creativity and attention to detail that Team Tequila brings to
+                        every project is simply remarkable. They transformed our vision into a
+                        stunning digital reality that exceeded all expectations.
+                      </p>
+                      <p className="tq__FoundersGrotesk_22 uppercase transform transition-all duration-700 hover:scale-105">Sarah Johnson</p>
+                      <p className="tq__FoundersGrotesk_22 uppercase opacity-50 transform transition-all duration-700 hover:opacity-70">Founder, TechFlow</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="testimonial-slide flex items-start gap-[24px]">
-                <video
-                  className="h-full mb-[24px]"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  src="/videos/testimonial1.mp4"
-                  style={{ maxWidth: 'inherit', maxHeight: '65vh' }}
-                />
-                <div className="flex items-end p-[64px] border-[0.5px] border-[var(--foreground)] w-[50vh] h-[65vh]">
-                  <div>
-                    <h3 className="tq__Instrument_58 mb-[32px]">
-                      "Exceptional Creativity and Professionalism!"
-                    </h3>
-                    <p className="tq__FoundersGrotesk_22 mb-[32px]">
-                      Working with Team Tequila has been an absolutely incredible experience! From
-                      the very first interaction, it was evident that this team is not just about
-                      delivering web design services—they are brand creators who truly elevate your
-                      imagination.
-                    </p>
-                    <p className="tq__FoundersGrotesk_22 uppercase">Ravi Kotwani</p>
-                    <p className="tq__FoundersGrotesk_22 uppercase opacity-50">CEO, XTASY</p>
+                <div
+                  className="testimonial-slide flex items-start gap-[24px] min-w-max opacity-90 hover:opacity-100 transition-all duration-500 hover:scale-[1.02]"
+                  role="listitem"
+                  data-slide="2"
+                >
+                  <div className="relative group">
+                    <div
+                      className="w-[60vh] h-[65vh] mb-[24px] rounded-lg shadow-2xl bg-black transform transition-all duration-700 hover:scale-105 cursor-pointer relative overflow-hidden"
+                      onClick={() => {
+                        console.log('Video 3 wrapper clicked!')
+                        openVideoPreview("/videos/testimonial3.mp4")
+                      }}
+                    >
+                      <video
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        src="/videos/testimonial3.mp4"
+                      />
+                      {/* Play button overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
+                        <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-500">
+                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-end p-[64px] border-[0.5px] border-[var(--foreground)] w-[50vh] h-[65vh] rounded-lg backdrop-blur-sm shadow-xl transform transition-all duration-700 hover:shadow-2xl">
+                    <div className="transform transition-all duration-700 hover:translate-y-[-8px]">
+                      <h3 className="tq__FoundersGrotesk_22 mb-[32px] transform transition-all duration-700 hover:scale-105">
+                        "Transformative Digital Experience!"
+                      </h3>
+                      <p className="tq__FoundersGrotesk_22 mb-[32px] transform transition-all duration-700 hover:translate-x-2">
+                        Team Tequila didn't just build a website—they created an immersive digital
+                        journey that perfectly captures our brand essence. The results speak for
+                        themselves.
+                      </p>
+                      <p className="tq__FoundersGrotesk_22 uppercase transform transition-all duration-700 hover:scale-105">Michael Chen</p>
+                      <p className="tq__FoundersGrotesk_22 uppercase opacity-50 transform transition-all duration-700 hover:opacity-70">Creative Director, StudioX</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Navigation Arrows */}
+            <div className="absolute bottom-8 right-8 flex items-center gap-4 z-10 sm:bottom-12 sm:right-12 animate-fade-in">
+              <button
+                onClick={scrollLeft}
+                className="w-12 h-12 rounded-full border border-[var(--foreground)] flex items-center justify-center transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-[var(--foreground)] focus:ring-opacity-50 hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:scale-110 hover:shadow-2xl"
+                aria-label="Scroll left"
+              >
+                <svg
+                  className="w-5 h-5 transition-all duration-500 group-hover:scale-125 group-hover:rotate-12"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {/* Slide Indicators */}
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalSlides }, (_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      const newPosition = -index * getSlideWidth()
+
+                      // Animate current slide out
+                      gsap.to(`[data-slide="${currentSlide}"]`, {
+                        opacity: 0.3,
+                        scale: 0.95,
+                        duration: 0.4,
+                        ease: "power2.out"
+                      })
+
+                      // Animate new slide in
+                      gsap.to(`[data-slide="${index}"]`, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.4,
+                        delay: 0.2,
+                        ease: "power2.out"
+                      })
+
+                      gsap.to(sliderRef.current, {
+                        x: newPosition,
+                        duration: 1.2,
+                        ease: "power3.out"
+                      })
+                      setScrollPosition(newPosition)
+                      setCurrentSlide(index)
+                    }}
+                    className={`w-3 h-3 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)] focus:ring-opacity-50 hover:scale-125 ${index === currentSlide
+                      ? 'bg-[var(--foreground)] scale-150 shadow-lg'
+                      : 'bg-[var(--foreground)] opacity-30 hover:opacity-80 hover:scale-110'
+                      }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+                <span className="text-xs opacity-50 ml-2">∞</span>
+              </div>
+
+              <button
+                onClick={scrollRight}
+                className="w-12 h-12 rounded-full border border-[var(--foreground)] flex items-center justify-center transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-[var(--foreground)] focus:ring-opacity-50 hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:scale-110 hover:shadow-2xl"
+                aria-label="Scroll right"
+              >
+                <svg
+                  className="w-5 h-5 transition-all duration-500 group-hover:scale-125 group-hover:-rotate-12"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
+
+          {/* Video Preview Modal */}
+          {isVideoModalOpen && selectedVideo && (
+            <div
+              className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-red-500/20"
+              onClick={closeVideoPreview}
+            >
+              {/* Backdrop with blur effect */}
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+
+              {/* Modal content */}
+              <div
+                className="relative z-10 max-w-4xl w-full max-h-[90vh]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Close button */}
+                <button
+                  onClick={closeVideoPreview}
+                  className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 hover:scale-110 hover:rotate-90 z-20 group"
+                  aria-label="Close video preview"
+                >
+                  <svg className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+
+                {/* Video container with proper aspect ratio */}
+                <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl bg-black">
+
+                  <video
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    loop
+                    playsInline
+                    controls
+                    src={selectedVideo}
+                    onLoadStart={() => {
+                      // Add loading state if needed
+                    }}
+                  />
+
+                  {/* Video overlay with play indicator */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Video info overlay */}
+                <div className="mt-4 text-center">
+                  <p className="text-white/80 text-sm">Click outside or press ESC to close</p>
+                </div>
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="py-[150px]">
-          <div className="container m-auto mb-[64px]">
-            <h2 className="tq__PPBook__100">FAQ</h2>
+          <div className="container m-auto">
+            {/* <h2 className="tq__PPBook__100">FAQ</h2> */}
+            <HeroTextLine text="FAQ" className="tq__PPBook__100 block text-3xl" delay={0} index={35} />
           </div>
           <div className="container flex justify-between items-start m-auto">
             <div className="w-6/12">
               <h3 className="tq__Instrument_36 mb-[32px]">
-                <AnimatedHeading text="Don't worry if you can't find your" className="indent-12" />
-                <AnimatedHeading text="question in the list given, ask us directly" />
-                <AnimatedHeading text="we are here for you." />
+                <HeroTextLine text="Don't worry if you can't find your" className="block indent-0" delay={0} index={14} />
+                <HeroTextLine text="question in the list given, ask us directly" className="block" delay={0.2} index={15} />
+                <HeroTextLine text="we are here for you." className="block" delay={0.4} index={16} />
               </h3>
               {/* <Link
                 href={'#'}
@@ -740,12 +1232,32 @@ export default function Home() {
                 </svg>
               </Link> */}
               <ScrollReveal delay={0.2}>
-                <Button text={'Contact us'} extraClasses="" onClick={() => {}} />
+                <Button text={'Contact us'} extraClasses="" onClick={() => { }} />
               </ScrollReveal>
             </div>
             <div className="w-6/12">
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   What is a responsive web design, and why is it crucial for my Dubai website?
                 </p>
                 <svg
@@ -754,6 +1266,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -761,11 +1283,34 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   What is SEO, and how can it benefit my Dubai business?
                 </p>
                 <svg
@@ -774,6 +1319,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -781,11 +1336,32 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   What kind of website maintenance services do you offer in Dubai?
                 </p>
                 <svg
@@ -794,6 +1370,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -801,11 +1387,34 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   Do you provide creative design contract services in Dubai?
                 </p>
                 <svg
@@ -814,6 +1423,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -821,11 +1440,34 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   Do you offer e-commerce website development services in Dubai?
                 </p>
                 <svg
@@ -834,6 +1476,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -841,11 +1493,34 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   Why should I choose Tequila as my branding and web design partner in Dubai?
                 </p>
                 <svg
@@ -854,6 +1529,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -861,11 +1546,34 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   Do you do logo design in Dubai, and how is it different from branding?
                 </p>
                 <svg
@@ -874,6 +1582,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -881,11 +1599,34 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   What is brand identity, and why is it important for my business?
                 </p>
                 <svg
@@ -894,6 +1635,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -901,11 +1652,34 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   How much does it cost to create a new brand identity or rebrand my current
                   business?
                 </p>
@@ -915,6 +1689,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -922,11 +1706,34 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   What are the key elements of a successful website design in Dubai?
                 </p>
                 <svg
@@ -935,6 +1742,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -942,11 +1759,34 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
-              <div className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E]">
-                <p className="tq__FoundersGrotesk_16 w-full">
+              <div
+                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
+                style={{
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(6px)'
+                  e.currentTarget.style.color = '#000000'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0px)'
+                  e.currentTarget.style.color = 'inherit'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <p
+                  className="tq__FoundersGrotesk_16 w-full"
+                  style={{
+                    transition: 'color 0.3s ease'
+                  }}
+                >
                   How long does it take to design and develop a website in Dubai?
                 </p>
                 <svg
@@ -955,6 +1795,16 @@ export default function Home() {
                   viewBox="0 0 10 7"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    transform: 'translateX(0px)',
+                    transition: 'all 0.3s ease-out'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateX(12px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateX(0px)'
+                  }}
                 >
                   <path
                     d="M1 1L5.08203 5.66518L9.16406 1"
@@ -962,6 +1812,9 @@ export default function Home() {
                     strokeWidth="1.63281"
                     strokeLinejoin="round"
                     className="stroke-[var(--foreground)]"
+                    style={{
+                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                    }}
                   />
                 </svg>
               </div>
@@ -971,15 +1824,16 @@ export default function Home() {
 
         <section className="py-[150px]">
           <div className="container m-auto">
-            <h2 className="tq__PPBook__100 mb-[64px]">Insights</h2>
+            {/* <h2 className="tq__PPBook__100 mb-[64px]">Insights</h2> */}
+            <HeroTextLine text="Insights" className="tq__PPBook__100 block text-3xl" delay={0} index={36} />
             <div className="flex justify-between gap-[32px]">
               <div className="w-full">
                 <ScrollReveal delay={0.1}>
                   <p className="tq__FoundersGrotesk_16">2025</p>
                 </ScrollReveal>
                 <h4 className="tq__Instrument_36 mb-[64px]">
-                  <AnimatedHeading text="The Seven Pillars of Building a" />
-                  <AnimatedHeading text="Premium Brand in UAE." />
+                  <HeroTextLine text="The Seven Pillars of Building a" className="block" delay={0} index={17} />
+                  <HeroTextLine text="Premium Brand in UAE." className="block" delay={0.2} index={18} />
                 </h4>
                 <ScrollReveal delay={0.3}>
                   <Image
@@ -996,8 +1850,8 @@ export default function Home() {
                   <p className="tq__FoundersGrotesk_16">2025</p>
                 </ScrollReveal>
                 <h4 className="tq__Instrument_36 mb-[64px]">
-                  <AnimatedHeading text="The Seven Pillars of Building a" />
-                  <AnimatedHeading text="Premium Brand in UAE." />
+                  <HeroTextLine text="The Seven Pillars of Building a" className="block" delay={0} index={19} />
+                  <HeroTextLine text="Premium Brand in UAE." className="block" delay={0.2} index={20} />
                 </h4>
                 <ScrollReveal delay={0.3}>
                   <Image
@@ -1030,7 +1884,7 @@ export default function Home() {
                   </svg>
                 </Link> */}
                 <ScrollReveal delay={0.4}>
-                  <Button text={'Read More Insights'} extraClasses="" onClick={() => {}} />
+                  <Button text={'Read More Insights'} extraClasses="" onClick={() => { }} />
                 </ScrollReveal>
               </div>
             </div>
@@ -1038,14 +1892,15 @@ export default function Home() {
         </section>
 
         <section className="py-[150px]">
-          <div className="container m-auto mb-[64px]">
-            <h2 className="tq__PPBook__100">Talk with Us!</h2>
+          <div className="container m-auto">
+            {/* <h2 className="tq__PPBook__100">Talk with Us!</h2> */}
+            <HeroTextLine text="Talk with Us!" className="tq__PPBook__100 block text-3xl" delay={0} index={37} />
           </div>
           <div className="container flex justify-between m-auto">
             <div className="w-5/12">
               <div className="max-w-[65%]">
                 <ScrollReveal delay={0.2}>
-                  <p className="tq__FoundersGrotesk_22 font-light indent-12 mb-[32px]">
+                  <p className="tq__FoundersGrotesk_22 font-light indent-0 mb-[32px]">
                     A "Creative Intelligence Studio" - an agency that not only designs and builds,
                     but crafts brands with intellect, heart, and future-readiness. Not just
                     aesthetic designs or websites, but strategic experiences.
@@ -1099,7 +1954,7 @@ export default function Home() {
                   />
                 </svg>
               </button> */}
-                <Button text={'Share Message'} extraClasses="" onClick={() => {}} />
+                <Button text={'Share Message'} extraClasses="" onClick={() => { }} />
               </ScrollReveal>
             </div>
           </div>

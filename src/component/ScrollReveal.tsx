@@ -1,6 +1,6 @@
 "use client";
 import { motion, useInView, useAnimation } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 type props = {
   children: React.ReactNode;
@@ -10,14 +10,21 @@ type props = {
 
 export default function ScrollReveal({ children, delay, className }: props) {
   const ref = useRef(null);
-  const isInview = useInView(ref, { once: true });
+  const isInview = useInView(ref, { once: false });
   const controls = useAnimation();
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (isInview) {
       controls.start("visible");
+      // Add a small delay to trigger CSS animations after Framer Motion
+      setTimeout(() => setIsVisible(true), delay ? delay * 1000 + 300 : 300);
+    } else {
+      // Reset animation state when element leaves viewport
+      controls.start("hidden");
+      setIsVisible(false);
     }
-  }, [isInview]);
+  }, [isInview, delay, controls]);
 
   return (
     <motion.div
@@ -35,7 +42,7 @@ export default function ScrollReveal({ children, delay, className }: props) {
       }}
       initial="hidden"
       animate={controls}
-      className={className}
+      className={`${className} ${isVisible ? 'animate' : ''}`}
     >
       {children}
     </motion.div>

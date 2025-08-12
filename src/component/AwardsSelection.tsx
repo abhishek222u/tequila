@@ -120,8 +120,8 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
         basePosition: new THREE.Vector3(), // NEW: Base position relative to row
         velocity: new THREE.Vector3(),
         angularVelocity: new THREE.Euler(),
-        dampening: 0.18,
-        rotationDampening: 0.16
+        dampening: 0.25,
+        rotationDampening: 0.22
       }
 
       thumbnailMeshes.push(mesh)
@@ -147,7 +147,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
             // Smooth position following
             const positionDiff = mesh.userData.targetPosition.clone().sub(mesh.position)
             mesh.userData.velocity.add(positionDiff.multiplyScalar(mesh.userData.dampening))
-            mesh.userData.velocity.multiplyScalar(0.88)
+            mesh.userData.velocity.multiplyScalar(0.92)
             mesh.position.add(mesh.userData.velocity)
 
             // Smooth rotation following
@@ -160,9 +160,9 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
             mesh.userData.angularVelocity.y += rotationDiff.y * mesh.userData.rotationDampening
             mesh.userData.angularVelocity.z += rotationDiff.z * mesh.userData.rotationDampening
 
-            mesh.userData.angularVelocity.x *= 0.9
-            mesh.userData.angularVelocity.y *= 0.9
-            mesh.userData.angularVelocity.z *= 0.9
+            mesh.userData.angularVelocity.x *= 0.85
+            mesh.userData.angularVelocity.y *= 0.85
+            mesh.userData.angularVelocity.z *= 0.85
 
             mesh.rotation.x += mesh.userData.angularVelocity.x
             mesh.rotation.y += mesh.userData.angularVelocity.y
@@ -287,24 +287,24 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
     const targetHeight = targetRect.height
     const threeY = containerRect.height / 2 - (targetTop + targetHeight / 2)
 
-    // Background morphing
-    gsap.to(backgroundPlane.position, {
-      y: threeY,
-      duration: 1.0,
-      ease: 'power2.inOut'
-    })
+            // Background morphing
+        gsap.to(backgroundPlane.position, {
+          y: threeY,
+          duration: 0.4,
+          ease: 'power2.out'
+        })
 
-    gsap.to(backgroundPlane.scale, {
-      y: targetHeight / 100,
-      duration: 1.0,
-      ease: 'power2.inOut'
-    })
+        gsap.to(backgroundPlane.scale, {
+          y: targetHeight / 100,
+          duration: 0.4,
+          ease: 'power2.out'
+        })
 
-    gsap.to(backgroundPlane.material, {
-      opacity: 1,
-      duration: 0.8,
-      ease: 'power2.out'
-    })
+        gsap.to(backgroundPlane.material, {
+          opacity: 1,
+          duration: 0.3,
+          ease: 'power2.out'
+        })
 
     // UPDATED: Move thumbnail's base position to follow the background
     const currentMesh = thumbnailMeshes[targetIndex]
@@ -316,8 +316,8 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
       gsap.to(currentMesh.userData.targetPosition, {
         x: currentMesh.userData.basePosition.x + 150,
         y: currentMesh.userData.basePosition.y,
-        duration: 1.0,
-        ease: 'power2.inOut'
+        duration: 0.4,
+        ease: 'power2.out'
       })
     }
   }, [])
@@ -339,7 +339,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
 
     gsap.to(backgroundPlane.material, {
       opacity: 1,
-      duration: 0.8,
+      duration: 0.3,
       ease: 'power2.out'
     })
   }, [])
@@ -386,14 +386,14 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
             x: 0,
             y: 0,
             z: 0,
-            duration: 0.5,
-            ease: 'power2.inOut'
+            duration: 0.3,
+            ease: 'power2.out'
           })
 
           gsap.to(prevMesh.material, {
             opacity: 0,
-            duration: 0.5,
-            ease: 'power2.inOut',
+            duration: 0.3,
+            ease: 'power2.out',
             onComplete: () => {
               prevMesh.visible = false
               prevMesh.userData.velocity.set(0, 0, 0)
@@ -404,6 +404,8 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
       }
 
       // UPDATED: Show current thumbnail positioned relative to its row
+      // COMMENTED OUT: Thumbnail display on mouse enter
+      /*
       const currentMesh = thumbnailMeshes[index]
       if (currentMesh && targetRow) {
         const targetRect = targetRow.getBoundingClientRect()
@@ -437,16 +439,17 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
           x: 1,
           y: 1,
           z: 1,
-          duration: 0.8,
+          duration: 0.4,
           ease: 'power2.out'
         })
 
         gsap.to(currentMesh.material, {
           opacity: 1,
-          duration: 0.8,
+          duration: 0.4,
           ease: 'power2.out'
         })
       }
+      */
     },
     [hoveredIndex, showBackground, morphBackgroundToRow]
   )
@@ -480,16 +483,16 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
               x: 0,
               y: 0,
               z: 0,
-              duration: 0.7,
-              delay: index * 0.1,
-              ease: 'power2.inOut'
+              duration: 0.4,
+              delay: index * 0.05,
+              ease: 'power2.out'
             })
 
             gsap.to(mesh.material, {
               opacity: 0,
-              duration: 0.7,
-              delay: index * 0.1,
-              ease: 'power2.inOut',
+              duration: 0.4,
+              delay: index * 0.05,
+              ease: 'power2.out',
               onComplete: () => {
                 mesh.visible = false
               }
@@ -497,16 +500,16 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
 
             gsap.to(mesh.userData.targetRotation, {
               z: exitDirection * Math.PI * 0.3,
-              duration: 0.7,
-              delay: index * 0.1,
-              ease: 'power2.inOut'
+              duration: 0.4,
+              delay: index * 0.05,
+              ease: 'power2.out'
             })
 
             gsap.to(mesh.userData.targetPosition, {
               y: mesh.position.y - 80,
-              duration: 0.7,
-              delay: index * 0.1,
-              ease: 'power2.inOut'
+              duration: 0.4,
+              delay: index * 0.05,
+              ease: 'power2.out'
             })
           }
         })
@@ -524,13 +527,13 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
             x: 0.92,
             y: 0.92,
             z: 0.92,
-            duration: 0.4,
+            duration: 0.2,
             ease: 'power2.out'
           })
 
           gsap.to(mesh.material, {
             opacity: 0.6,
-            duration: 0.4,
+            duration: 0.2,
             ease: 'power2.out'
           })
         }
@@ -607,7 +610,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
                 position: 'relative',
                 zIndex: isHovered ? 15 : 10,
                 transform: isHovered ? 'translateX(6px)' : 'translateX(0px)',
-                transition: 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
               }}
               onMouseMove={(e) => handleMouseMove(e, index)}
               onMouseEnter={(e) => handleRowEnter(index, e)}
@@ -619,7 +622,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
                   color: isHovered ? '#000000' : 'inherit',
                   position: 'relative',
                   zIndex: 20,
-                  transition: 'color 0.8s ease'
+                  transition: 'color 0.3s ease'
                 }}
               >
                 {award.year}
@@ -631,7 +634,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
                   color: isHovered ? '#000000' : 'inherit',
                   position: 'relative',
                   zIndex: 20,
-                  transition: 'color 0.8s ease'
+                  transition: 'color 0.3s ease'
                 }}
               >
                 {award.organization}
@@ -643,7 +646,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
                   color: isHovered ? '#000000' : 'inherit',
                   position: 'relative',
                   zIndex: 20,
-                  transition: 'color 0.8s ease'
+                  transition: 'color 0.3s ease'
                 }}
               >
                 {award.category}
@@ -659,7 +662,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
                   transform: isHovered ? 'translateX(12px)' : 'translateX(0px)',
                   position: 'relative',
                   zIndex: 20,
-                  transition: 'all 1s ease-out'
+                  transition: 'all 0.3s ease-out'
                 }}
               >
                 <path
@@ -669,7 +672,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
                   strokeWidth="2.0267"
                   strokeLinejoin="round"
                   style={{
-                    transition: 'stroke 0.8s ease, stroke-opacity 0.8s ease'
+                    transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
                   }}
                 />
               </svg>
