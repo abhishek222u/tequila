@@ -40,10 +40,10 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
 
-  // Enhanced Vertex Shader with skew + curve animation
+  // Enhanced Vertex Shader with optimized performance
   const vertexShader = `
     uniform float u_time;
-    uniform float u_rollProgress; // 0.0 = rectangle, 0.5 = slight transform, 1.0 = rectangle
+    uniform float u_rollProgress;
     
     varying vec2 vUv;
     varying vec3 vNormal;
@@ -60,17 +60,15 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       // Calculate transform intensity that peaks at 0.5 progress
       float transformIntensity;
       if (u_rollProgress <= 0.5) {
-        // From 0 to 0.5: increase transform
         transformIntensity = easeInOutSine(u_rollProgress * 2.0);
       } else {
-        // From 0.5 to 1.0: decrease transform back to flat
         transformIntensity = easeInOutSine((1.0 - u_rollProgress) * 2.0);
       }
       
-      // Apply skew + curve transform when intensity is active
+      // Apply optimized skew + curve transform when intensity is active
       if (transformIntensity > 0.01) {
-        // 1. SKEW TRANSFORMATION
-        float rotationAmount = pos.x * 0.15 * transformIntensity;
+        // 1. OPTIMIZED SKEW TRANSFORMATION
+        float rotationAmount = pos.x * 0.12 * transformIntensity;
         
         float cosAngle = cos(rotationAmount);
         float sinAngle = sin(rotationAmount);
@@ -79,30 +77,23 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
         float skewedY = pos.y * cosAngle - pos.z * sinAngle;
         float skewedZ = pos.y * sinAngle + pos.z * cosAngle;
         
-        // 2. CURVE TRANSFORMATION
-        float curveIntensity = transformIntensity * 0.3;
+        // 2. OPTIMIZED CURVE TRANSFORMATION
+        float curveIntensity = transformIntensity * 0.25;
         
-        // Horizontal curve
-        float horizontalCurve = sin(pos.x * 0.8 + u_time * 0.5) * curveIntensity;
-        
-        // Vertical curve
-        float verticalCurve = sin(pos.y * 0.6 + u_time * 0.3) * curveIntensity;
-        
-        // Diagonal curve
-        float diagonalCurve = sin((pos.x + pos.y) * 0.4 + u_time * 0.4) * curveIntensity * 0.5;
+        // Simplified curve calculations for better performance
+        float horizontalCurve = sin(pos.x * 0.6 + u_time * 0.4) * curveIntensity;
+        float verticalCurve = sin(pos.y * 0.5 + u_time * 0.2) * curveIntensity;
         
         // Apply combined transformations
-        pos.y = skewedY + horizontalCurve + diagonalCurve;
-        pos.z = skewedZ + verticalCurve + horizontalCurve * 0.5;
+        pos.y = skewedY + horizontalCurve;
+        pos.z = skewedZ + verticalCurve;
         
-        // 3. DEPTH VARIATION
-        float depthCurve = pos.x * pos.x * 0.01 * transformIntensity;
-        float waveDespth = sin(pos.x * 1.2 + pos.y * 0.8 + u_time * 0.6) * 0.05 * transformIntensity;
+        // 3. OPTIMIZED DEPTH VARIATION
+        float depthCurve = pos.x * pos.x * 0.008 * transformIntensity;
+        pos.z += depthCurve;
         
-        pos.z += depthCurve + waveDespth;
-        
-        // 4. EDGE PRESERVATION
-        float edgeDistance = 0.1;
+        // 4. EDGE PRESERVATION with better performance
+        float edgeDistance = 0.08;
         
         // Preserve top edge
         if (pos.y > (3.375 - edgeDistance)) {
@@ -125,20 +116,20 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       
       vPosition = pos;
       
-      // Enhanced normal calculation
+      // Optimized normal calculation
       if (transformIntensity > 0.01) {
         vec3 tangentX = vec3(1.0, 0.0, 0.0);
         vec3 tangentY = vec3(0.0, 1.0, 0.0);
         
-        float rotationAmount = pos.x * 0.15 * transformIntensity;
+        float rotationAmount = pos.x * 0.12 * transformIntensity;
         float cosAngle = cos(rotationAmount);
         float sinAngle = sin(rotationAmount);
         
         tangentY = vec3(0.0, cosAngle, sinAngle);
         
-        float curveInfluence = transformIntensity * 0.3;
-        tangentX.z += cos(pos.x * 0.8) * curveInfluence * 0.8;
-        tangentY.z += cos(pos.y * 0.6) * curveInfluence * 0.6;
+        float curveInfluence = transformIntensity * 0.25;
+        tangentX.z += cos(pos.x * 0.6) * curveInfluence * 0.6;
+        tangentY.z += cos(pos.y * 0.5) * curveInfluence * 0.5;
         
         vNormal = normalize(cross(tangentX, tangentY));
       } else {
@@ -149,7 +140,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
     }
   `
 
-  // Enhanced Fragment Shader
+  // Enhanced Fragment Shader with better performance
   const fragmentShader = `
     uniform sampler2D u_texture;
     uniform float u_time;
@@ -166,7 +157,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       // Keep video perfectly clean
       vec4 textureColor = texture2D(u_texture, uv);
       
-      // Calculate transform intensity
+      // Calculate transform intensity with optimized math
       float transformIntensity;
       if (u_rollProgress <= 0.5) {
         transformIntensity = (sin((u_rollProgress * 2.0 - 0.5) * 3.14159265) + 1.0) * 0.5;
@@ -174,7 +165,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
         transformIntensity = (sin(((1.0 - u_rollProgress) * 2.0 - 0.5) * 3.14159265) + 1.0) * 0.5;
       }
       
-      // Enhanced lighting for curved surface
+      // Optimized lighting for curved surface
       vec3 lightDir = normalize(vec3(1.0, 0.5, 2.0));
       vec3 lightDir2 = normalize(vec3(-0.5, 1.0, 1.5));
       
@@ -183,11 +174,11 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       
       float lighting = mix(
         0.98,
-        max(0.85, (NdotL1 * 0.4 + NdotL2 * 0.2 + 0.6)),
-        transformIntensity * 0.6
+        max(0.85, (NdotL1 * 0.35 + NdotL2 * 0.15 + 0.65)),
+        transformIntensity * 0.5
       );
       
-      float ambientBoost = transformIntensity * 0.05;
+      float ambientBoost = transformIntensity * 0.03;
       lighting += ambientBoost;
       
       gl_FragColor = vec4(textureColor.rgb * lighting, textureColor.a * u_opacity);
@@ -243,12 +234,12 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
     videoTexture.magFilter = THREE.LinearFilter
     videoTexture.format = THREE.RGBFormat
 
-    // Fixed geometry size
+    // Fixed geometry size with optimized resolution
     const meshWidth = 6
     const meshHeight = meshWidth * (9 / 16)
 
-    // Higher resolution geometry for better curve detail
-    const geometry = new THREE.PlaneGeometry(meshWidth, meshHeight, 60, 35)
+    // Optimized geometry resolution for better performance
+    const geometry = new THREE.PlaneGeometry(meshWidth, meshHeight, 48, 28)
 
     // Material with enhanced shaders
     const material = new THREE.ShaderMaterial({
@@ -292,9 +283,9 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
 
     const elapsedTime = clockRef.current.getElapsedTime()
 
-    // Update shader uniforms
+    // Update shader uniforms with optimized timing
     const material = meshRef.current.material as THREE.ShaderMaterial
-    material.uniforms.u_time.value = elapsedTime
+    material.uniforms.u_time.value = elapsedTime * 0.8 // Reduced time multiplier for smoother animation
 
     // Render
     rendererRef.current.render(sceneRef.current, cameraRef.current)
@@ -335,7 +326,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
     const material = meshRef.current.material as THREE.ShaderMaterial
     const { topY } = calculatePositions()
 
-    // Timeline: Rectangle → Skew+Curve Transform → Rectangle
+    // Timeline: Rectangle → Skew+Curve Transform → Rectangle with optimized timing
     scrollAnimationRef.current = gsap
       .timeline({
         paused: true,
@@ -348,12 +339,11 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
           }
         },
         onComplete: () => {
-          // Moved onComplete to timeline instead of ScrollTrigger
           onAnimationComplete?.()
         }
       })
       .to(meshRef.current.scale, {
-        duration: 1,
+        duration: 1.2,
         x: 1.0,
         y: 1.0,
         z: 1.0,
@@ -362,7 +352,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       .to(
         meshRef.current.position,
         {
-          duration: 1,
+          duration: 1.2,
           x: 0,
           y: topY,
           z: 0,
@@ -373,19 +363,19 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       .to(
         material.uniforms.u_rollProgress,
         {
-          duration: 1,
+          duration: 1.2,
           value: 1.0,
           ease: 'power2.inOut'
         },
         0
       )
 
-    // Create ScrollTrigger - removed onComplete from here
+    // Create ScrollTrigger with optimized scrub value
     scrollTriggerRef.current = ScrollTrigger.create({
       trigger: containerRef.current,
       start: 'top bottom',
       end: 'bottom top',
-      scrub: 1.5,
+      scrub: 1.2, // Reduced for smoother animation
       animation: scrollAnimationRef.current,
       onEnter: () => {
         videoRef.current?.play()

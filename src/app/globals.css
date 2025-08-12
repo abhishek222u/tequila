@@ -74,11 +74,44 @@
   --background: #000000;
   --foreground: #f9f8fc;
 }
+/* Performance optimizations for smooth animations */
 * {
   transition:
     background-color 0.4s ease,
     color 0.4s ease,
     border-color 0.4s ease;
+  /* Add performance optimizations */
+  box-sizing: border-box;
+}
+
+/* Enhanced performance for animated elements */
+.animate,
+.hero-text-line-container,
+.testimonial-slide,
+.stats-slide-left,
+.stats-slide-right {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Optimize GPU acceleration for smooth animations */
+.gpu-accelerated {
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* Smooth scrolling optimizations */
+html {
+  scroll-behavior: smooth;
+  /* Optimize for smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 100px;
 }
 
 body {
@@ -91,6 +124,12 @@ body {
     background-color 0.4s ease,
     color 0.4s ease;
   @apply antialiased;
+  /* Performance optimizations */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent layout shifts during animations */
+  overflow-x: hidden;
 }
 
 /* PPNeue Montreal */
@@ -227,47 +266,134 @@ input {
   }
 }
 
-button,
-.button {
-  @apply uppercase text-[var(--background)] font-medium px-[15px] pt-[10px] pb-[6] bg-[var(--foreground)] rounded-full relative cursor-pointer overflow-hidden;
+/* General button styles - removed conflicting rules */
+/* Specific button styles are now handled by .tq__button class */
+
+/* New Button Styles - Outline to Filled Animation */
+/* Using more specific selector to override any conflicts */
+button.tq__button,
+.tq__button {
+  /* Reset all properties first */
+  all: unset !important;
+  box-sizing: border-box !important;
+  
+  /* Apply our custom styles with !important to override Tailwind */
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+  /* padding: 16px 32px !important; */
+  background: transparent !important;
+  border: 2px solid white !important;
+  color: white !important;
+  border-radius: 9999px !important;
+  position: relative !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  font-family: 'Founders Grotesk', sans-serif !important;
+  letter-spacing: 0.05em !important;
+  display: inline-block !important;
+  
+  /* Ensure no background conflicts */
+  background-color: transparent !important;
+  background-image: none !important;
+  text-align: center !important;
+  /* Debug: Add a distinctive style to see if this is working */
+  min-height: 38px !important;
+  min-width: 180px !important;
+  
+  /* Modern button enhancements */
+  will-change: transform, box-shadow, border-color;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
-.button {
-  @apply inline-block;
-}
-.tq__button__text,
-.tq__button__layer-text {
-  @apply relative;
-  transition: top 0.4s cubic-bezier(0.33, 1, 0.68, 1);
-}
+
 .tq__button__text {
-  @apply top-0;
+  position: relative !important;
+  z-index: 10 !important;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  /* Ensure text styling */
+  color: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  text-transform: inherit !important;
+  letter-spacing: inherit !important;
+  display: inline-block !important;
+  margin-top: 6px !important;
+  
+  /* Smooth text transitions */
+  will-change: color, transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
-.tq__button__layer {
-  @apply absolute left-0 top-[110%] w-full h-full flex justify-center items-center rounded-full;
-  transition: top 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+
+.tq__button__fill-bg {
+  position: absolute !important;
+  inset: 0 !important;
+  background: white !important;
+  transform: scaleX(0) !important;
+  transform-origin: left !important;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  /* Ensure proper layering */
+  z-index: 1 !important;
+  
+  /* Enhanced fill animation */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  
+  /* Add subtle gradient for modern look */
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
 }
-.tq__button__layer .tq__button__layer-text {
-  @apply absolute text-white;
-}
-.tq__button__layer .tq__button__layer-background {
-  @apply w-full h-full bg-gray-500 rounded-full;
-  transition: all 0.4s cubic-bezier(0.33, 1, 0.68, 1);
-}
+
+/* Hover Effects */
 .tq__button:hover {
-  @apply bg-black;
-  transition: all 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+  border-color: white !important;
+  box-shadow: 0 15px 35px rgba(255, 255, 255, 0.25), 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-3px) scale(1.02) !important;
 }
-.tq__button:hover .tq__button__text,
-.tq__button__text:hover {
-  @apply top-[-40px];
+
+.tq__button:hover .tq__button__text {
+  color: black !important;
+  transform: scale(1.05) !important;
 }
-.tq__button:hover .tq__button__layer,
-.tq__button__text:hover + .tq__button__layer {
-  @apply top-0;
+
+.tq__button:hover .tq__button__fill-bg {
+  transform: scaleX(1) !important;
 }
-.tq__button__layer:hover .tq__button__layer-background,
-.tq__button__text:hover + .tq__button__layer .tq__button__layer-background {
-  @apply w-full rounded-full;
+
+/* Active/Pressed State */
+.tq__button:active {
+  transform: translateY(-1px) scale(0.98) !important;
+  transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2), 0 3px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Focus State for Accessibility */
+.tq__button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Enhanced focus-visible for modern browsers */
+.tq__button:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Add subtle border glow effect */
+.tq__button::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: -2px !important;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1)) !important;
+  border-radius: 9999px !important;
+  z-index: -1 !important;
+  opacity: 0 !important;
+  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+.tq__button:hover::before {
+  opacity: 1 !important;
 }
 
 .header-blur-background {
@@ -312,4 +438,391 @@ button,
 }
 .navbar-open h3 {
   @apply w-full;
+}
+
+/* Testimonials Slider Styles */
+.testimonial-slider-container {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.testimonial-slider {
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.testimonial-slide {
+  flex-shrink: 0;
+  will-change: transform;
+}
+
+.testimonial-slide video {
+  pointer-events: none;
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Drag indicator animations */
+@keyframes dragPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.animate-pulse {
+  animation: dragPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Smooth transitions for slider elements */
+.testimonial-slide {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.testimonial-slide:hover {
+  transform: translateY(-2px);
+}
+
+/* Enhanced cursor states */
+.testimonial-slider-container.cursor-grab {
+  cursor: grab;
+}
+
+.testimonial-slider-container.cursor-grabbing {
+  cursor: grabbing;
+}
+
+/* Progress bar animation */
+.testimonial-slider-container .progress-bar {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced testimonial slide effects */
+.testimonial-slide {
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonial-slide:hover {
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.2));
+}
+
+/* Active slide enhancement */
+.testimonial-slide.active {
+  filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.3));
+}
+
+/* Smooth container scaling */
+.testimonial-slider-container {
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced drag indicator */
+.testimonial-slider-container .drag-indicator {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Animated Text Line Styles */
+.char {
+  display: inline-block;
+  position: relative;
+  will-change: transform, opacity, color;
+}
+
+.char:not(:last-child) {
+  margin-right: 0.02em;
+}
+
+/* Smooth character transitions */
+.char {
+  transition: color 0.3s ease;
+}
+
+/* Ensure proper text rendering during animation */
+.animated-text-line {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Hero Text Animation Styles */
+.hero-text-line-container {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.hero-text-line {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform, opacity, color, filter;
+}
+
+.hero-text-line .char {
+  display: inline-block;
+  position: relative;
+  will-change: transform, opacity, color, filter;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.hero-text-line .char:not(:last-child) {
+  margin-right: 0.02em;
+}
+
+/* Enhanced character animations */
+.hero-text-line .char {
+  transition: color 0.3s ease, filter 0.3s ease;
+}
+
+/* Smooth container animations */
+.hero-text-line-container {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effects for interactive feel */
+.hero-text-line-container:hover .char {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Performance optimizations */
+.hero-text-line-container,
+.hero-text-line,
+.hero-text-line .char {
+  contain: layout style paint;
+  isolation: isolate;
+}
+
+/* Slide-in animations for statistics */
+.stats-slide-left {
+  opacity: 0;
+  transform: translateX(-300px) scale(0.6) rotateY(-15deg);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: all 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.stats-slide-left.animate {
+  opacity: 1;
+  transform: translateX(0) scale(1) rotateY(0deg);
+}
+
+.stats-slide-right {
+  opacity: 0;
+  transform: translateX(300px) scale(0.6) rotateY(15deg);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: all 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.stats-slide-right.animate {
+  opacity: 1;
+  transform: translateX(0) scale(1) rotateY(0deg);
+}
+
+/* Smooth reset animations when leaving viewport */
+.stats-slide-left:not(.animate),
+.stats-slide-right:not(.animate) {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* .all-buttons-texts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 14px;
+}
+.rowFirts-div {
+  margin-top: -3px;
+}
+.buttons1.row1button2 {
+  margin-left: 2px;
+}
+.container-fluid {
+  max-width: 1506px;
+}
+.rowFirts2-div {
+  margin-top: 5px;
+}
+.rowFirts3-div {
+  margin-top: 7px;
+}
+.buttons1 {
+  font-size: 12px;
+  padding: 5px 12px;
+  display: inline-block;
+} */
+
+/* Enhanced testimonial slider performance */
+.testimonial-slider-container {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  /* Performance optimizations */
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+.testimonial-slider {
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  /* GPU acceleration */
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.testimonial-slide {
+  flex-shrink: 0;
+  will-change: transform, opacity, filter;
+  /* Performance optimizations */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  /* Smooth transitions */
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonial-slide video {
+  pointer-events: none;
+  /* Video performance optimizations */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Enhanced progress bar performance */
+.testimonial-slider-container .progress-bar {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: width;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Optimized navigation buttons */
+.testimonial-slider-container .nav-button {
+  will-change: transform, background-color, box-shadow;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced slide indicators */
+.testimonial-slider-container .slide-indicator {
+  will-change: transform, opacity, background-color;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Video modal performance optimizations */
+.video-modal-content {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Enhanced FAQ hover effects */
+.faq-item {
+  will-change: transform, background-color, color;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Optimized button animations */
+.tq__button {
+  will-change: transform, box-shadow, border-color, background-color;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Enhanced scroll reveal performance */
+.scroll-reveal-element {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Optimized Three.js canvas performance */
+.three-canvas {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Enhanced loading states */
+.loading-element {
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Optimized image and video performance */
+img, video {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Enhanced container animations */
+.animated-container {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }

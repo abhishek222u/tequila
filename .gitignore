@@ -1,1 +1,9 @@
 node_modules
+next
+.next/
+*.tgz
+__MACOSX/
+.env*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

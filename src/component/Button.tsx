@@ -1,5 +1,6 @@
 'use client'
 import { ReactNode } from 'react'
+
 interface ButtonProps {
   text: string
   extraClasses?: string
@@ -13,11 +14,8 @@ const Button = ({ text, extraClasses, onClick }: ButtonProps) => {
       className={`tq__button ${extraClasses ? extraClasses : ''}`}
       onClick={onClick}
     >
-      <div className="tq__button__text">{text}</div>
-      <div className="tq__button__layer">
-        <div className="tq__button__layer-text">{text}</div>
-        <div className="tq__button__layer-background"></div>
-      </div>
+      <span className="tq__button__text">{text}</span>
+      <span className="tq__button__fill-bg"></span>
     </button>
   )
 }
