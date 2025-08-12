@@ -34,9 +34,9 @@ export default function ScrollReveal({ children, delay = 0, className }: props) 
     },
   };
 
-  // Optimized transition settings
+  // Optimized transition settings with proper typing
   const transition = {
-    type: "spring",
+    type: "spring" as const,
     duration: 0.8,
     damping: 25,
     stiffness: 100,
