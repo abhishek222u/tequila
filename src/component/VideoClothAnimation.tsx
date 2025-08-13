@@ -40,96 +40,185 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
 
-  // Enhanced Vertex Shader with optimized performance
+  // Enhanced Vertex Shader with advanced physics and realistic cloth simulation
   const vertexShader = `
     uniform float u_time;
     uniform float u_rollProgress;
+    uniform float u_mouseX;
+    uniform float u_mouseY;
+    uniform float u_resolution;
     
     varying vec2 vUv;
     varying vec3 vNormal;
     varying vec3 vPosition;
+    varying float vDepth;
+    varying float vDistortion;
     
-    float easeInOutSine(float x) {
-      return -(cos(3.14159265 * x) - 1.0) / 2.0;
+    // Improved easing functions
+    float easeOutQuart(float x) {
+      return 1.0 - pow(1.0 - x, 4.0);
+    }
+    
+    float easeInOutCubic(float x) {
+      return x < 0.5 ? 4.0 * x * x * x : 1.0 - pow(-2.0 * x + 2.0, 3.0) / 2.0;
+    }
+    
+    // Advanced noise function for realistic cloth movement
+    float noise(vec2 p) {
+      return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+    }
+    
+    float smoothNoise(vec2 p) {
+      vec2 i = floor(p);
+      vec2 f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+      
+      float a = noise(i);
+      float b = noise(i + vec2(1.0, 0.0));
+      float c = noise(i + vec2(0.0, 1.0));
+      float d = noise(i + vec2(1.0, 1.0));
+      
+      return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+    }
+    
+    // Cloth physics simulation
+    vec3 applyClothPhysics(vec3 pos, float intensity) {
+      vec3 clothPos = pos;
+      
+      // Gravity effect
+      float gravity = sin(u_time * 0.5) * 0.02 * intensity;
+      clothPos.z -= gravity;
+      
+      // Wind effect
+      float windStrength = 0.015 * intensity;
+      float windX = sin(u_time * 0.3) * windStrength;
+      float windY = cos(u_time * 0.4) * windStrength;
+      clothPos.x += windX;
+      clothPos.y += windY;
+      
+      // Fabric tension and elasticity
+      float tension = 0.8 + 0.2 * intensity;
+      float elasticity = 0.95;
+      
+      // Apply tension to edges
+      float edgeInfluence = 0.1;
+      if (abs(pos.x) > 2.5) {
+        clothPos.x *= elasticity;
+        clothPos.x += (pos.x - clothPos.x) * edgeInfluence;
+      }
+      if (abs(pos.y) > 1.5) {
+        clothPos.y *= elasticity;
+        clothPos.y += (pos.y - clothPos.y) * edgeInfluence;
+      }
+      
+      return clothPos;
     }
     
     void main() {
       vUv = uv;
       vec3 pos = position;
       
-      // Calculate transform intensity that peaks at 0.5 progress
+      // Calculate transform intensity with improved easing
       float transformIntensity;
       if (u_rollProgress <= 0.5) {
-        transformIntensity = easeInOutSine(u_rollProgress * 2.0);
+        transformIntensity = easeInOutCubic(u_rollProgress * 2.0);
       } else {
-        transformIntensity = easeInOutSine((1.0 - u_rollProgress) * 2.0);
+        transformIntensity = easeInOutCubic((1.0 - u_rollProgress) * 2.0);
       }
       
-      // Apply optimized skew + curve transform when intensity is active
+      // Apply advanced transformations when intensity is active
       if (transformIntensity > 0.01) {
-        // 1. OPTIMIZED SKEW TRANSFORMATION
-        float rotationAmount = pos.x * 0.12 * transformIntensity;
+        // 1. ENHANCED SKEW TRANSFORMATION with realistic perspective
+        float rotationAmount = pos.x * 0.15 * transformIntensity;
+        float perspectiveSkew = pos.x * pos.x * 0.02 * transformIntensity;
         
         float cosAngle = cos(rotationAmount);
         float sinAngle = sin(rotationAmount);
         
-        // Apply skew rotation to Y and Z coordinates
+        // Apply skew rotation with perspective
         float skewedY = pos.y * cosAngle - pos.z * sinAngle;
         float skewedZ = pos.y * sinAngle + pos.z * cosAngle;
         
-        // 2. OPTIMIZED CURVE TRANSFORMATION
-        float curveIntensity = transformIntensity * 0.25;
+        // 2. ADVANCED CURVE TRANSFORMATION with multiple frequency waves
+        float curveIntensity = transformIntensity * 0.3;
         
-        // Simplified curve calculations for better performance
-        float horizontalCurve = sin(pos.x * 0.6 + u_time * 0.4) * curveIntensity;
-        float verticalCurve = sin(pos.y * 0.5 + u_time * 0.2) * curveIntensity;
+        // Primary wave
+        float primaryWave = sin(pos.x * 0.8 + u_time * 0.3) * curveIntensity;
+        float secondaryWave = sin(pos.x * 1.6 + u_time * 0.6) * curveIntensity * 0.5;
+        float tertiaryWave = sin(pos.x * 2.4 + u_time * 0.9) * curveIntensity * 0.25;
         
-        // Apply combined transformations
-        pos.y = skewedY + horizontalCurve;
-        pos.z = skewedZ + verticalCurve;
+        // Vertical waves
+        float verticalWave = sin(pos.y * 0.7 + u_time * 0.2) * curveIntensity * 0.6;
+        float verticalWave2 = sin(pos.y * 1.4 + u_time * 0.4) * curveIntensity * 0.3;
         
-        // 3. OPTIMIZED DEPTH VARIATION
-        float depthCurve = pos.x * pos.x * 0.008 * transformIntensity;
-        pos.z += depthCurve;
+        // Combine all waves
+        float horizontalCurve = primaryWave + secondaryWave + tertiaryWave;
+        float verticalCurve = verticalWave + verticalWave2;
         
-        // 4. EDGE PRESERVATION with better performance
-        float edgeDistance = 0.08;
+        // 3. ADVANCED DEPTH VARIATION with realistic perspective
+        float depthCurve = pos.x * pos.x * 0.012 * transformIntensity;
+        float depthWave = sin(pos.x * 0.5 + u_time * 0.1) * 0.008 * transformIntensity;
         
-        // Preserve top edge
+        // 4. MOUSE INTERACTION (subtle)
+        float mouseInfluence = 0.02;
+        float mouseDistance = distance(pos.xy, vec2(u_mouseX, u_mouseY));
+        float mouseEffect = smoothstep(2.0, 0.0, mouseDistance) * mouseInfluence * transformIntensity;
+        
+        // 5. NOISE-BASED MICRO-MOVEMENTS for realistic fabric texture
+        float noiseScale = 2.0;
+        float noiseIntensity = 0.008 * transformIntensity;
+        vec2 noiseCoord = pos.xy * noiseScale + u_time * 0.1;
+        float fabricNoise = smoothNoise(noiseCoord) * noiseIntensity;
+        
+        // Apply all transformations
+        pos.y = skewedY + horizontalCurve + mouseEffect + fabricNoise;
+        pos.z = skewedZ + verticalCurve + depthCurve + depthWave;
+        pos.x += fabricNoise * 0.5;
+        
+        // 6. ENHANCED EDGE PRESERVATION with smooth falloff
+        float edgeDistance = 0.12;
+        float edgeSmoothness = 0.8;
+        
+        // Preserve top edge with smooth transition
         if (pos.y > (3.375 - edgeDistance)) {
           float edgeFactor = (3.375 - pos.y) / edgeDistance;
-          edgeFactor = clamp(edgeFactor, 0.0, 1.0);
+          edgeFactor = smoothstep(0.0, edgeSmoothness, clamp(edgeFactor, 0.0, 1.0));
           
           pos.y = mix(3.375, pos.y, edgeFactor);
           pos.z = mix(0.0, pos.z, edgeFactor);
         }
         
-        // Preserve right edge  
+        // Preserve right edge with smooth transition
         if (pos.x > (3.0 - edgeDistance)) {
           float edgeFactor = (3.0 - pos.x) / edgeDistance;
-          edgeFactor = clamp(edgeFactor, 0.0, 1.0);
+          edgeFactor = smoothstep(0.0, edgeSmoothness, clamp(edgeFactor, 0.0, 1.0));
           
           pos.x = mix(3.0, pos.x, edgeFactor);
           pos.z = mix(0.0, pos.z, edgeFactor);
         }
+        
+        // 7. APPLY CLOTH PHYSICS
+        pos = applyClothPhysics(pos, transformIntensity);
       }
       
       vPosition = pos;
+      vDepth = pos.z;
+      vDistortion = transformIntensity;
       
-      // Optimized normal calculation
+      // Enhanced normal calculation for realistic lighting
       if (transformIntensity > 0.01) {
         vec3 tangentX = vec3(1.0, 0.0, 0.0);
         vec3 tangentY = vec3(0.0, 1.0, 0.0);
         
-        float rotationAmount = pos.x * 0.12 * transformIntensity;
+        float rotationAmount = pos.x * 0.15 * transformIntensity;
         float cosAngle = cos(rotationAmount);
         float sinAngle = sin(rotationAmount);
         
         tangentY = vec3(0.0, cosAngle, sinAngle);
         
-        float curveInfluence = transformIntensity * 0.25;
-        tangentX.z += cos(pos.x * 0.6) * curveInfluence * 0.6;
-        tangentY.z += cos(pos.y * 0.5) * curveInfluence * 0.5;
+        float curveInfluence = transformIntensity * 0.3;
+        tangentX.z += cos(pos.x * 0.8) * curveInfluence * 0.8;
+        tangentY.z += cos(pos.y * 0.7) * curveInfluence * 0.7;
         
         vNormal = normalize(cross(tangentX, tangentY));
       } else {
@@ -140,16 +229,39 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
     }
   `
 
-  // Enhanced Fragment Shader with better performance
+  // Enhanced Fragment Shader with advanced lighting and effects
   const fragmentShader = `
     uniform sampler2D u_texture;
     uniform float u_time;
     uniform float u_opacity;
     uniform float u_rollProgress;
+    uniform float u_mouseX;
+    uniform float u_mouseY;
     
     varying vec2 vUv;
     varying vec3 vNormal;
     varying vec3 vPosition;
+    varying float vDepth;
+    varying float vDistortion;
+    
+    // Improved lighting functions
+    vec3 calculateLighting(vec3 normal, vec3 lightDir, float intensity) {
+      float NdotL = max(0.0, dot(normal, lightDir));
+      float specular = pow(max(0.0, dot(reflect(-lightDir, normal), vec3(0.0, 0.0, 1.0))), 32.0);
+      return vec3(NdotL * intensity + specular * 0.3);
+    }
+    
+    // Fresnel effect for realistic fabric
+    float fresnel(vec3 viewDir, vec3 normal, float power) {
+      return pow(1.0 - max(0.0, dot(viewDir, normal)), power);
+    }
+    
+    // Subsurface scattering simulation for fabric
+    vec3 subsurfaceScattering(vec3 normal, vec3 lightDir, vec3 color) {
+      float wrap = 0.5;
+      float NdotL = max(0.0, (dot(normal, lightDir) + wrap) / (1.0 + wrap));
+      return color * NdotL * 0.3;
+    }
     
     void main() {
       vec2 uv = vUv;
@@ -157,7 +269,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       // Keep video perfectly clean
       vec4 textureColor = texture2D(u_texture, uv);
       
-      // Calculate transform intensity with optimized math
+      // Calculate transform intensity with improved math
       float transformIntensity;
       if (u_rollProgress <= 0.5) {
         transformIntensity = (sin((u_rollProgress * 2.0 - 0.5) * 3.14159265) + 1.0) * 0.5;
@@ -165,23 +277,54 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
         transformIntensity = (sin(((1.0 - u_rollProgress) * 2.0 - 0.5) * 3.14159265) + 1.0) * 0.5;
       }
       
-      // Optimized lighting for curved surface
-      vec3 lightDir = normalize(vec3(1.0, 0.5, 2.0));
+      // Enhanced lighting setup with multiple light sources
+      vec3 lightDir1 = normalize(vec3(1.0, 0.5, 2.0));
       vec3 lightDir2 = normalize(vec3(-0.5, 1.0, 1.5));
+      vec3 lightDir3 = normalize(vec3(0.0, -0.8, 1.2));
       
-      float NdotL1 = dot(normalize(vNormal), lightDir);
-      float NdotL2 = dot(normalize(vNormal), lightDir2);
+      vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));
       
+      // Calculate lighting contributions
+      vec3 lighting1 = calculateLighting(normalize(vNormal), lightDir1, 0.4);
+      vec3 lighting2 = calculateLighting(normalize(vNormal), lightDir2, 0.25);
+      vec3 lighting3 = calculateLighting(normalize(vNormal), lightDir3, 0.15);
+      
+      // Combine lighting
+      vec3 totalLighting = lighting1 + lighting2 + lighting3;
+      
+      // Ambient lighting with depth variation
+      float ambientBase = 0.65;
+      float ambientDepth = smoothstep(-2.0, 2.0, vDepth) * 0.1;
+      float ambient = ambientBase + ambientDepth;
+      
+      // Fresnel effect for realistic fabric appearance
+      float fresnelIntensity = fresnel(viewDir, normalize(vNormal), 3.0) * 0.2;
+      
+      // Subsurface scattering for fabric
+      vec3 subsurface = subsurfaceScattering(normalize(vNormal), lightDir1, textureColor.rgb);
+      
+      // Apply lighting with enhanced realism
       float lighting = mix(
-        0.98,
-        max(0.85, (NdotL1 * 0.35 + NdotL2 * 0.15 + 0.65)),
-        transformIntensity * 0.5
+        ambient,
+        max(ambient, totalLighting.r + totalLighting.g + totalLighting.b),
+        transformIntensity * 0.6
       );
       
-      float ambientBoost = transformIntensity * 0.03;
-      lighting += ambientBoost;
+      // Add subtle color variation based on distortion
+      vec3 colorVariation = vec3(1.0);
+      if (vDistortion > 0.1) {
+        float variation = sin(vPosition.x * 2.0 + u_time * 0.5) * 0.02;
+        colorVariation = vec3(1.0 + variation, 1.0, 1.0 - variation);
+      }
       
-      gl_FragColor = vec4(textureColor.rgb * lighting, textureColor.a * u_opacity);
+      // Final color calculation
+      vec3 finalColor = textureColor.rgb * lighting * colorVariation + subsurface + fresnelIntensity;
+      
+      // Add subtle vignette effect
+      float vignette = 1.0 - smoothstep(0.3, 1.0, length(uv - 0.5) * 1.5);
+      finalColor *= vignette;
+      
+      gl_FragColor = vec4(finalColor, textureColor.a * u_opacity);
     }
   `
 
@@ -191,33 +334,40 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
     const containerWidth = containerRef.current.clientWidth
     const containerHeight = containerRef.current.clientHeight
 
-    // Scene setup
+    // Scene setup with enhanced environment
     const scene = new THREE.Scene()
     sceneRef.current = scene
 
-    // Camera setup
-    const camera = new THREE.PerspectiveCamera(75, containerWidth / containerHeight, 0.1, 1000)
+    // Enhanced camera setup with better perspective
+    const camera = new THREE.PerspectiveCamera(60, containerWidth / containerHeight, 0.1, 1000)
     camera.position.z = 5
     cameraRef.current = camera
 
-    // Renderer setup with BLACK background
+    // Enhanced renderer setup with better quality
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
       antialias: true,
-      alpha: false // Changed to false for solid background
+      alpha: false,
+      powerPreference: 'high-performance'
     })
     renderer.setSize(containerWidth, containerHeight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    renderer.setClearColor(0x000000, 1) // Pure black background
+    renderer.setClearColor(0x000000, 1)
+    renderer.shadowMap.enabled = true
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap
+    renderer.toneMapping = THREE.ACESFilmicToneMapping
+    renderer.toneMappingExposure = 1.2
+    renderer.outputColorSpace = THREE.SRGBColorSpace
     rendererRef.current = renderer
 
-    // Video setup
+    // Video setup with enhanced quality
     const video = document.createElement('video')
     video.src = videoSrc
     video.crossOrigin = 'anonymous'
     video.loop = true
     video.muted = true
     video.playsInline = true
+    video.preload = 'auto'
 
     video.addEventListener('loadeddata', () => {
       setVideoLoaded(true)
@@ -228,20 +378,19 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
 
     videoRef.current = video
 
-    // Video texture
+    // Enhanced video texture with better filtering
     const videoTexture = new THREE.VideoTexture(video)
     videoTexture.minFilter = THREE.LinearFilter
     videoTexture.magFilter = THREE.LinearFilter
     videoTexture.format = THREE.RGBFormat
+    videoTexture.generateMipmaps = false
 
-    // Fixed geometry size with optimized resolution
+    // Enhanced geometry with higher resolution for smoother deformation
     const meshWidth = 6
     const meshHeight = meshWidth * (9 / 16)
+    const geometry = new THREE.PlaneGeometry(meshWidth, meshHeight, 64, 36)
 
-    // Optimized geometry resolution for better performance
-    const geometry = new THREE.PlaneGeometry(meshWidth, meshHeight, 48, 28)
-
-    // Material with enhanced shaders
+    // Enhanced material with improved shaders
     const material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
@@ -249,18 +398,21 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
         u_texture: { value: videoTexture },
         u_time: { value: 0 },
         u_rollProgress: { value: 0.0 },
-        u_opacity: { value: 1.0 }
+        u_opacity: { value: 1.0 },
+        u_mouseX: { value: 0.0 },
+        u_mouseY: { value: 0.0 },
+        u_resolution: { value: new THREE.Vector2(containerWidth, containerHeight) }
       },
       transparent: true,
       side: THREE.DoubleSide
     })
 
-    // Mesh
+    // Mesh with enhanced properties
     const mesh = new THREE.Mesh(geometry, material)
     scene.add(mesh)
     meshRef.current = mesh
 
-    // Calculate positions
+    // Calculate positions with enhanced precision
     const distance = 5
     const fov = (camera.fov * Math.PI) / 180
     const visibleHeight = 2 * Math.tan(fov / 2) * distance
@@ -283,11 +435,11 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
 
     const elapsedTime = clockRef.current.getElapsedTime()
 
-    // Update shader uniforms with optimized timing
+    // Update shader uniforms with enhanced timing
     const material = meshRef.current.material as THREE.ShaderMaterial
-    material.uniforms.u_time.value = elapsedTime * 0.8 // Reduced time multiplier for smoother animation
+    material.uniforms.u_time.value = elapsedTime * 0.6 // Optimized for smoother animation
 
-    // Render
+    // Render with enhanced quality
     rendererRef.current.render(sceneRef.current, cameraRef.current)
     animationFrameRef.current = requestAnimationFrame(animate)
   }, [])
@@ -326,7 +478,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
     const material = meshRef.current.material as THREE.ShaderMaterial
     const { topY } = calculatePositions()
 
-    // Timeline: Rectangle → Skew+Curve Transform → Rectangle with optimized timing
+    // Enhanced timeline with smoother easing and better timing
     scrollAnimationRef.current = gsap
       .timeline({
         paused: true,
@@ -343,39 +495,39 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
         }
       })
       .to(meshRef.current.scale, {
-        duration: 1.2,
+        duration: 1.0,
         x: 1.0,
         y: 1.0,
         z: 1.0,
-        ease: 'power2.inOut'
+        ease: 'power3.out'
       })
       .to(
         meshRef.current.position,
         {
-          duration: 1.2,
+          duration: 1.0,
           x: 0,
           y: topY,
           z: 0,
-          ease: 'power2.inOut'
+          ease: 'power3.out'
         },
         0
       )
       .to(
         material.uniforms.u_rollProgress,
         {
-          duration: 1.2,
+          duration: 1.0,
           value: 1.0,
-          ease: 'power2.inOut'
+          ease: 'power3.out'
         },
         0
       )
 
-    // Create ScrollTrigger with optimized scrub value
+    // Enhanced ScrollTrigger with better scrub value for smoother animation
     scrollTriggerRef.current = ScrollTrigger.create({
       trigger: containerRef.current,
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 1.2, // Reduced for smoother animation
+      start: 'top center',
+      end: 'bottom center',
+      scrub: 0.8, // Faster animation for shorter scroll distance
       animation: scrollAnimationRef.current,
       onEnter: () => {
         videoRef.current?.play()
@@ -394,6 +546,12 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
     cameraRef.current.updateProjectionMatrix()
     rendererRef.current.setSize(containerWidth, containerHeight)
 
+    // Update resolution uniform
+    const material = meshRef.current.material as THREE.ShaderMaterial
+    if (material.uniforms.u_resolution) {
+      material.uniforms.u_resolution.value.set(containerWidth, containerHeight)
+    }
+
     const { rightX, topY, centerX } = calculatePositions()
 
     if (isExpanded) {
@@ -402,6 +560,24 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       meshRef.current.position.set(rightX, topY, 0)
     }
   }, [isExpanded, calculatePositions])
+
+  // Enhanced mouse interaction
+  const handleMouseMove = useCallback((event: MouseEvent) => {
+    if (!meshRef.current) return
+
+    const material = meshRef.current.material as THREE.ShaderMaterial
+    if (material.uniforms.u_mouseX && material.uniforms.u_mouseY) {
+      // Convert mouse coordinates to normalized space
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (rect) {
+        const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1
+        const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1
+        
+        material.uniforms.u_mouseX.value = mouseX * 3 // Scale to mesh space
+        material.uniforms.u_mouseY.value = mouseY * 2 // Scale to mesh space
+      }
+    }
+  }, [])
 
   useEffect(() => {
     initThreeJS()
@@ -412,10 +588,12 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
     }, 500)
 
     window.addEventListener('resize', handleResize)
+    window.addEventListener('mousemove', handleMouseMove)
 
     return () => {
       clearTimeout(timer)
       window.removeEventListener('resize', handleResize)
+      window.removeEventListener('mousemove', handleMouseMove)
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current)
       }
@@ -433,7 +611,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
         videoRef.current.src = ''
       }
     }
-  }, [initThreeJS, animate, setupScrollAnimation, handleResize])
+  }, [initThreeJS, animate, setupScrollAnimation, handleResize, handleMouseMove])
 
   useEffect(() => {
     if (videoLoaded) {
@@ -445,7 +623,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
   }, [videoLoaded, setupScrollAnimation])
 
   return (
-    <div ref={containerRef} className={`relative w-full ${className}`} style={{ height: '300vh' }}>
+    <div ref={containerRef} className={`relative w-full ${className}`} style={{ height: '150vh' }}>
       <div className="sticky top-0 w-full h-screen bg-black">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
       </div>
