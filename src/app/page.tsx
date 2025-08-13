@@ -1246,588 +1246,148 @@ export default function Home() {
               </ScrollReveal>
             </div>
             <div className="w-6/12">
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                  e.currentTarget.style.backgroundColor = '#ffffff'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  What is a responsive web design, and why is it crucial for my Dubai website?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                  e.currentTarget.style.backgroundColor = '#ffffff'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  What is SEO, and how can it benefit my Dubai business?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  What kind of website maintenance services do you offer in Dubai?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                  e.currentTarget.style.backgroundColor = '#ffffff'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  Do you provide creative design contract services in Dubai?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                  e.currentTarget.style.backgroundColor = '#ffffff'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  Do you offer e-commerce website development services in Dubai?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                  e.currentTarget.style.backgroundColor = '#ffffff'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  Why should I choose Tequila as my branding and web design partner in Dubai?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                  e.currentTarget.style.backgroundColor = '#ffffff'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  Do you do logo design in Dubai, and how is it different from branding?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                  e.currentTarget.style.backgroundColor = '#ffffff'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  What is brand identity, and why is it important for my business?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                  e.currentTarget.style.backgroundColor = '#ffffff'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  How much does it cost to create a new brand identity or rebrand my current
-                  business?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                  e.currentTarget.style.backgroundColor = '#ffffff'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  What are the key elements of a successful website design in Dubai?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
-              <div
-                className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer group"
-                style={{
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(6px)'
-                  e.currentTarget.style.color = '#000000'
-                  e.currentTarget.style.backgroundColor = '#ffffff'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0px)'
-                  e.currentTarget.style.color = 'inherit'
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                <p
-                  className="tq__FoundersGrotesk_16 w-full"
-                  style={{
-                    transition: 'color 0.3s ease'
-                  }}
-                >
-                  How long does it take to design and develop a website in Dubai?
-                </p>
-                <svg
-                  width="10"
-                  height="7"
-                  viewBox="0 0 10 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transform: 'translateX(0px)',
-                    transition: 'all 0.3s ease-out'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateX(12px)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateX(0px)'
-                  }}
-                >
-                  <path
-                    d="M1 1L5.08203 5.66518L9.16406 1"
-                    strokeOpacity="0.5"
-                    strokeWidth="1.63281"
-                    strokeLinejoin="round"
-                    className="stroke-[var(--foreground)]"
-                    style={{
-                      transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                    }}
-                  />
-                </svg>
-              </div>
+              {(() => {
+                const [openFaq, setOpenFaq] = useState<number | null>(null);
+                
+                const faqData = [
+                  {
+                    question: "What is a responsive web design, and why is it crucial for my Dubai website?",
+                    answer: "Responsive web design ensures your website adapts seamlessly across all devices - from mobile phones to desktop computers. In Dubai's competitive digital landscape, this is crucial because over 60% of users browse on mobile devices. A responsive design improves user experience, boosts search engine rankings, and increases conversion rates by ensuring your website looks and functions perfectly regardless of how visitors access it."
+                  },
+                  {
+                    question: "What is SEO, and how can it benefit my Dubai business?",
+                    answer: "SEO (Search Engine Optimization) is the process of optimizing your website to rank higher in search engine results. For Dubai businesses, this means more visibility when potential customers search for your services. Benefits include increased organic traffic, higher brand awareness, better user experience, and ultimately more leads and sales. In Dubai's competitive market, strong SEO can be the difference between being found or being overlooked."
+                  },
+                  {
+                    question: "What kind of website maintenance services do you offer in Dubai?",
+                    answer: "We provide comprehensive website maintenance services including regular security updates, performance optimization, content updates, backup management, uptime monitoring, and technical support. Our maintenance packages ensure your website remains secure, fast, and up-to-date with the latest technologies and security standards, protecting your investment and maintaining optimal performance."
+                  },
+                  {
+                    question: "Do you provide creative design contract services in Dubai?",
+                    answer: "Yes, we offer comprehensive creative design contract services in Dubai. This includes brand identity design, marketing collateral, digital assets, and ongoing design support. Our contracts are flexible and can be tailored to your specific needs, whether you need a one-time project or ongoing creative partnership to maintain brand consistency across all touchpoints."
+                  },
+                  {
+                    question: "Do you offer e-commerce website development services in Dubai?",
+                    answer: "Absolutely! We specialize in creating powerful e-commerce websites that drive sales and provide excellent user experiences. Our e-commerce solutions include secure payment gateways, inventory management, order processing, customer accounts, and mobile-optimized shopping experiences. We integrate with popular platforms like Shopify, WooCommerce, and custom solutions based on your business requirements."
+                  },
+                  {
+                    question: "Why should I choose Tequila as my branding and web design partner in Dubai?",
+                    answer: "Tequila brings over a decade of experience in Dubai's unique market, combining local cultural insights with international design standards. We offer end-to-end solutions from strategy to execution, with a proven track record of delivering results that drive business growth. Our team understands the Middle Eastern market nuances and creates designs that resonate with your target audience while maintaining global appeal."
+                  },
+                  {
+                    question: "Do you do logo design in Dubai, and how is it different from branding?",
+                    answer: "Yes, we provide professional logo design services in Dubai. Logo design is just one element of branding - it's the visual symbol of your brand. Branding encompasses your entire brand identity including logo, color palette, typography, messaging, values, and customer experience. While a logo is important, comprehensive branding creates a complete brand story that connects with your audience on multiple levels."
+                  },
+                  {
+                    question: "What is brand identity, and why is it important for my business?",
+                    answer: "Brand identity is the collection of visual and verbal elements that represent your business - including logo, colors, fonts, messaging, and overall personality. It's crucial because it creates recognition, builds trust, differentiates you from competitors, and communicates your values to customers. A strong brand identity helps customers remember you, choose you over competitors, and become loyal advocates for your business."
+                  },
+                  {
+                    question: "How much does it cost to create a new brand identity or rebrand my current business?",
+                    answer: "Brand identity costs vary based on scope and complexity. A basic logo design might start around AED 3,000, while comprehensive brand identity packages typically range from AED 15,000 to AED 50,000. Rebranding existing businesses may cost more due to additional research and strategy work. We provide transparent pricing and can work within your budget while ensuring quality results that deliver long-term value."
+                  },
+                  {
+                    question: "What are the key elements of a successful website design in Dubai?",
+                    answer: "Successful Dubai websites require: mobile-first responsive design, fast loading speeds, Arabic/English language support, culturally appropriate design elements, local SEO optimization, secure hosting, intuitive navigation, clear call-to-actions, and professional content. We also ensure compliance with local regulations and create designs that resonate with Dubai's diverse, international audience while maintaining global appeal."
+                  },
+                  {
+                    question: "How long does it take to design and develop a website in Dubai?",
+                    answer: "Website development timelines depend on complexity: simple websites take 2-4 weeks, standard business websites 4-8 weeks, and complex e-commerce or custom solutions 8-16 weeks. Factors affecting timeline include design revisions, content preparation, functionality requirements, and client feedback cycles. We provide detailed project timelines upfront and keep you updated throughout the process to ensure timely delivery."
+                  }
+                ];
+
+                return (
+                  <div className="space-y-0">
+                    {faqData.map((faq, index) => (
+                      <div key={index} className="border-b-[0.5px] border-[#6E6E6E]">
+                        <div
+                          className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] cursor-pointer group"
+                          style={{
+                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                            color: openFaq === index ? '#000000' : 'inherit',
+                            backgroundColor: openFaq === index ? '#ffffff' : 'transparent',
+                            transform: openFaq === index ? 'translateX(6px)' : 'translateX(0px)'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (openFaq !== index) {
+                              e.currentTarget.style.transform = 'translateX(6px)'
+                              e.currentTarget.style.color = '#000000'
+                              e.currentTarget.style.backgroundColor = '#ffffff'
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (openFaq !== index) {
+                              e.currentTarget.style.transform = 'translateX(0px)'
+                              e.currentTarget.style.color = 'inherit'
+                              e.currentTarget.style.backgroundColor = 'transparent'
+                            }
+                          }}
+                          onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                        >
+                          <p
+                            className="tq__FoundersGrotesk_16 w-full"
+                            style={{
+                              color: openFaq === index ? '#000000' : 'inherit',
+                              transition: 'color 0.3s ease'
+                            }}
+                          >
+                            {faq.question}
+                          </p>
+                          <svg
+                            width="10"
+                            height="7"
+                            viewBox="0 0 10 7"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            style={{
+                              transform: openFaq === index ? 'rotate(180deg) translateX(0px)' : 'translateX(0px)',
+                              transition: 'all 0.3s ease-out',
+                              stroke: openFaq === index ? '#000000' : 'var(--foreground)',
+                              strokeOpacity: openFaq === index ? '1' : '0.5'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (openFaq !== index) {
+                                e.currentTarget.style.transform = 'translateX(12px)'
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (openFaq !== index) {
+                                e.currentTarget.style.transform = 'translateX(0px)'
+                              }
+                            }}
+                          >
+                            <path
+                              d="M1 1L5.08203 5.66518L9.16406 1"
+                              strokeWidth="1.63281"
+                              strokeLinejoin="round"
+                              style={{
+                                transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
+                              }}
+                            />
+                          </svg>
+                        </div>
+                        <div
+                          className="overflow-hidden"
+                          style={{
+                            maxHeight: openFaq === index ? '500px' : '0px',
+                            opacity: openFaq === index ? 1 : 0,
+                            transform: openFaq === index ? 'translateY(0px)' : 'translateY(-10px)',
+                            transition: openFaq === index 
+                              ? 'max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease, transform 0.4s ease'
+                              : 'max-height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.2s ease, transform 0.2s ease'
+                          }}
+                        >
+                          <div className="pb-[20px] pl-[32px] pr-[32px]">
+                            <p className="tq__FoundersGrotesk_16 text-[#6E6E6E] leading-relaxed">
+                              {faq.answer}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </section>
@@ -1925,24 +1485,24 @@ export default function Home() {
                   <input
                     type="text"
                     placeholder="Your Name"
-                    className="tq__FoundersGrotesk_22 uppercase inline mx-[24px] align-middle border-b border-[var(--foreground)]"
+                    className="tq__FoundersGrotesk_22 uppercase inline mx-[24px] align-middle border-b border-[var(--foreground)] transition-all duration-300 ease-in-out hover:border-opacity-70 focus:border-opacity-100 focus:outline-none focus:scale-105 transform hover:scale-102"
                   />
                   and you can reach me at
                   <input
                     type="text"
                     placeholder="Your Email"
-                    className="tq__FoundersGrotesk_22 uppercase inline mx-[24px] align-middle border-b border-[var(--foreground)]"
+                    className="tq__FoundersGrotesk_22 uppercase inline mx-[24px] align-middle border-b border-[var(--foreground)] transition-all duration-300 ease-in-out hover:border-opacity-70 focus:border-opacity-100 focus:outline-none focus:scale-105 transform hover:scale-102"
                   />
                   or
                   <input
                     type="text"
                     placeholder="Your Phone Number"
-                    className="tq__FoundersGrotesk_22 uppercase inline mx-[24px] align-middle border-b border-[var(--foreground)]"
+                    className="tq__FoundersGrotesk_22 uppercase inline mx-[24px] align-middle border-b border-[var(--foreground)] transition-all duration-300 ease-in-out hover:border-opacity-70 focus:border-opacity-100 focus:outline-none focus:scale-105 transform hover:scale-102"
                   />
                   I'd love to share a little about what's on my mind:
                   <textarea
                     placeholder="Your Message"
-                    className="tq__FoundersGrotesk_22 uppercase inline w-full h-[180px] align-middle border-b border-[var(--foreground)]"
+                    className="tq__FoundersGrotesk_22 uppercase inline w-full h-[180px] align-middle border-b border-[var(--foreground)] transition-all duration-300 ease-in-out hover:border-opacity-70 focus:border-opacity-100 focus:outline-none focus:scale-105 transform hover:scale-102 resize-none"
                   ></textarea>
                 </div>
 
