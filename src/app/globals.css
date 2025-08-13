@@ -659,32 +659,126 @@ html {
   transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* .all-buttons-texts {
+
+.whatwe-do-section-paraSection {
+  font-size: 36.65px;
+  max-width: 457px;
+    font-family: "InstrumentSerif-Regular";
+}
+.transparent-buttons-block img {
+  width: 100%;
+}
+.transparent-buttons-block {
+  position: relative;
+}
+.all-buttons-texts {
   position: absolute;
   top: 0;
   left: 0;
   padding: 14px;
 }
-.rowFirts-div {
-  margin-top: -3px;
-}
-.buttons1.row1button2 {
-  margin-left: 2px;
-}
-.container-fluid {
-  max-width: 1506px;
-}
-.rowFirts2-div {
-  margin-top: 5px;
-}
-.rowFirts3-div {
-  margin-top: 7px;
-}
 .buttons1 {
   font-size: 12px;
   padding: 5px 12px;
   display: inline-block;
-} */
+}
+.rowFirts-div {
+  margin-top: 4px;
+}
+.buttons1.row1button2 {
+  margin-left: 95px;
+}
+
+.container-fluid {
+  max-width: 1506px;
+}
+.rowFirts2-div {
+  margin-top: 20px;
+}
+.rowFirts3-div {
+  margin-top: 20px;
+}
+.Tqlimagesection img {
+  width: 100%;
+}
+.heding-and-text-bliaks {
+  background: #fff;
+  color: #000;
+}
+.heding-and-text-bliaks {
+  background: #fff;
+  color: #000;
+  padding: 20px;
+}
+.block-cornerd-text{
+  position: relative;
+}
+.block-cornerd-text::after {
+  width: calc( 80% - 120px );
+  content:  "";
+  background: #fff;
+  height: 100%;
+}
+.block-cornerd-text::after {
+  width: calc( 100% - 105px );
+  content: "";
+  background: #fff;
+  height: 100%;
+  position: absolute;
+  right: 0;
+}
+.heding-and-text-bliaks h2 {
+  font-size: 59.3px;
+ line-height: 58px;
+    font-family: "PPNeueMontreal-Medium";
+}
+.whatwe-do-section-paraSection {
+  margin-bottom: 50px;
+}
+
+.heding-and-text-bliaks.Branding h2 {
+  font-size: 59.3px;
+  line-height: 58px;
+  font-family: "PPNeueMontreal-Medium";
+}
+.heding-and-text-bliaks.Branding h2 {
+  margin-bottom: 72px;
+}
+.heding-and-text-bliaks h2 {
+  margin-bottom: 20px;
+}
+.rowFirts-div.Branding {
+  margin-top: 2px;
+}
+.buttons1.row1button2.Branding {
+  margin-left: 8px;
+}
+.rowFirts2-div.Branding {
+  margin-top: 8px;
+}
+.buttons1.row2button5.Branding {
+  margin-left: 8px;
+}
+.block-cornerd-text.Branding::after {
+  width: calc( 100% - 142px );
+}
+.block-cornerd-text.Communication::after {
+  width: calc( 100% - 173px );
+}
+.heding-and-text-bliaks.Branding.Communication {
+  padding-bottom: 59px;
+}
+.rowFirts-div.Branding.Communication {
+  margin-top: -3px;
+}
+.what_we_do_section.position-relative {
+  padding-top: 80px;
+  padding-bottom: 100px;
+}
+.whatwe-do-section-paraSection span {
+  display: block;
+  text-align: right;
+}
 
 /* Enhanced testimonial slider performance */
 .testimonial-slider-container {

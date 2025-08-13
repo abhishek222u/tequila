@@ -178,7 +178,7 @@ export default function Home() {
 
   const closeVideoPreview = () => {
     console.log('Closing video preview')
-    
+
     // Enhanced close animation
     gsap.to('.video-modal-content', {
       opacity: 0,
@@ -211,7 +211,7 @@ export default function Home() {
     if (sliderRef.current) {
       // Kill any existing animations
       gsap.killTweensOf('.testimonial-slide');
-      
+
       // Animate all slides in with staggered delay and better easing
       gsap.fromTo(
         '.testimonial-slide',
@@ -276,7 +276,7 @@ export default function Home() {
 
     const handleTouchEnd = () => {
       if (!isSwiping) return
-      
+
       const diff = startX - currentX
       const threshold = 50
 
@@ -287,7 +287,7 @@ export default function Home() {
           scrollLeft()
         }
       }
-      
+
       isSwiping = false
     }
 
@@ -350,7 +350,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="h-[335vh]">
+        <section className="">
           <VideoClothAnimation
             videoSrc="/videos/home.mp4"
             className="w-full h-full"
@@ -462,24 +462,26 @@ export default function Home() {
                     web interfaces & frameworks
                   </p>
                 </div>
-                {/* <div className="transparent-buttons-block relative">
-                  <img src="assets/images/teq-buttons.png" className="buttons-Bg" alt="" />
+
+                <div className="transparent-buttons-block relative">
+                  <img src="/images/teq-buttons.png" className="w-full" alt="" />
                   <div className="all-buttons-texts">
                     <div className="rowFirts-div">
-                      <a href="" className="buttons1 row1button1">Custom Website Design & Development</a>
+                      <a href="" className="buttons1 row1button1 ml-3.5">Custom Website Design & Development</a>
                       <a href="" className="buttons1 row1button2">Domain & Hosting Management</a>
                     </div>
                     <div className="rowFirts2-div">
-                      <a href="" className="buttons1 row2button2">Ecommerce Website Design &
+                      <a href="" className="buttons1 row2button2 ml-3.5">Ecommerce Website Design &
                         Development</a>
                     </div>
                     <div className="rowFirts3-div">
-                      <a href="" className="buttons1 row2button2">Website Maintenance & Support</a>
-                      <a href="" className="buttons1 row2button2">Web Applications Design &
+                      <a href="" className="buttons1 row2button2 ml-3.5">Website Maintenance & Support</a>
+                      <a href="" className="buttons1 row2button2 ml-24">Web Applications Design &
                         Development</a>
                     </div>
                   </div>
-                </div> */}
+                </div>
+
                 <svg
                   viewBox="0 0 600 206"
                   fill="none"
@@ -503,6 +505,25 @@ export default function Home() {
                     efficient visual language
                   </p>
                 </div>
+                <div className="transparent-buttons-block Branding">
+                  <img src="/images/ui-buttons.png" className="buttons-Bg" alt="UI Buttons" />
+                  <div className="all-buttons-texts">
+                    <div className="rowFirts-div Branding">
+                      <a href="" className="buttons1 row1button1 Branding">Logo Design & Visual Identity</a>
+                      <a href="" className="buttons1 row1button2 Branding">Branding, Strategy & Development</a>
+                    </div>
+                    <div className="rowFirts2-div Branding">
+                      <a href="" className="buttons1 row2button85 Branding">Rebranding</a>
+                      <a href="" className="buttons1 row2button5 Branding">Brand Elevation</a>
+                      <a href="" className="buttons1 row2button6 Branding">UI/ UX Design for Digital Products</a>
+                    </div>
+                    <div className="rowFirts3-div">
+                      <a href="" className="buttons1 row2button52 Branding">Corporate Profile & Company Brochure</a>
+                      <a href="" className="buttons1 row2button366 Branding">Graphic Design</a>
+                    </div>
+                  </div>
+                </div>
+
                 <svg
                   viewBox="0 0 600 206"
                   fill="none"
@@ -527,6 +548,20 @@ export default function Home() {
                     Elevating your brand's social presence to your potential customers aided with
                     effective strategy & design
                   </p>
+                </div>
+
+                <div className="transparent-buttons-block Branding Communication">
+                  <img src="/images/labuttom.png" className="buttons-Bg" alt="Buttons Background" />
+                  <div className="all-buttons-texts">
+                    <div className="rowFirts-div Branding Communication">
+                      <a href="" className="buttons1 row1button1 Branding Communication">Video Storyboarding & Production</a>
+                      <a href="" className="buttons1 row1button2 Branding Communication">Photography & Visual Storytelling</a>
+                    </div>
+                    <div className="rowFirts2-div Branding Communication">
+                      <a href="" className="buttons1 row2button85 Branding Communication">Social Media Strategy & Design</a>
+                      <a href="" className="buttons1 row2button5 Branding Communication">Search Engine Optimisation(SEO)</a>
+                    </div>
+                  </div>
                 </div>
                 <svg
                   viewBox="0 0 600 206"
