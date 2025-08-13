@@ -151,12 +151,12 @@ body {
 
 .tq__PPBook__58 {
   font-family: 'PP Neue Montreal Book';
-  font-size: clamp(1.5rem, 5vw, 58px);
+  font-size: clamp(1.5rem, 5vw, 40px);
 }
 
 .tq__PPMedium__58 {
   font-family: 'PP Neue Montreal';
-  font-size: clamp(1.5rem, 5vw, 58px);
+  font-size: clamp(1.5rem, 5vw, 40px);
 }
 
 .tq__PPBook__36 {
@@ -215,7 +215,7 @@ body {
 
 .tq__FoundersGrotesk_14 {
   font-family: 'Founders Grotesk';
-  font-size: clamp(12px, 1.5vw, 14px);
+  font-size: clamp(10px, 1vw, 10px);
 }
 
 input {
