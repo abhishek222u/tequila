@@ -904,16 +904,16 @@ height: 34px;
   margin-bottom: 20px;
 }
 .rowFirts-div.Branding {
-  margin-top: 2px;
+  margin-top: 14px;
 }
 .buttons1.row1button2.Branding {
-  margin-left: 8px;
+  margin-left: 75px;
 }
 .rowFirts2-div.Branding {
-  margin-top: 8px;
+  margin-top: 20px;
 }
 .buttons1.row2button5.Branding {
-  margin-left: 8px;
+  margin-left: 55px;
 }
 .block-cornerd-text.Branding::after {
   width: calc( 100% - 142px );
@@ -925,7 +925,7 @@ height: 34px;
   padding-bottom: 59px;
 }
 .rowFirts-div.Branding.Communication {
-  margin-top: -3px;
+  margin-top: 8px;
 }
 .what_we_do_section.position-relative {
   padding-top: 80px;

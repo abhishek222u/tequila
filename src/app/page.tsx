@@ -449,11 +449,11 @@ export default function Home() {
               <HeroTextLine text="around our story, what we stand for!" className="block" delay={0.2} index={10} />
             </h3>
             <div className="flex justify-between gap-[24px]">
-              <ScrollReveal delay={0.2} className="w-full">
+              <ScrollReveal delay={0.2} className="w-full min-h-[680px]">
                 <div className="tq__FoundersGrotesk_14 uppercase relative after:content-[''] after:absolute after:top-0 after:right-0 after:w-[85%] after:h-full after:bg-[var(--foreground)]">
                   Technology
                 </div>
-                <div className="p-8 min-h-[270px] bg-[var(--foreground)]">
+                <div className="p-8 min-h-[300px] bg-[var(--foreground)]">
                   <h3 className="tq__PPMedium__58 text-[var(--background)] mb-[16px]">
                     Web Design & Development
                   </h3>
@@ -463,7 +463,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="transparent-buttons-block relative">
+                <div className="transparent-buttons-block relative ">
                   <img src="/images/teq-buttons.png" className="w-full" alt="" />
                   <div className="all-buttons-texts">
                     <div className="rowFirts-div">
@@ -494,11 +494,11 @@ export default function Home() {
                   />
                 </svg>
               </ScrollReveal>
-              <ScrollReveal delay={0.3} className="w-full">
+              <ScrollReveal delay={0.3} className="w-full min-h-[680px]">
                 <div className="tq__FoundersGrotesk_14 uppercase relative after:content-[''] after:absolute after:top-0 after:right-0 after:w-[80%] after:h-full after:bg-[var(--foreground)]">
                   Identity & Design
                 </div>
-                <div className="p-8 min-h-[270px] bg-[var(--foreground)]">
+                <div className="p-8 min-h-[300px] bg-[var(--foreground)]">
                   <h3 className="tq__PPMedium__58 text-[var(--background)] mb-[16px]">Branding</h3>
                   <p className="tq__FoundersGrotesk_22 font-light text-[var(--background)] mb-[32px]">
                     Crafting an effective perception of your brand, and elevating it with an
@@ -509,17 +509,17 @@ export default function Home() {
                   <img src="/images/ui-buttons.png" className="buttons-Bg" alt="UI Buttons" />
                   <div className="all-buttons-texts">
                     <div className="rowFirts-div Branding">
-                      <a href="" className="buttons1 row1button1 Branding">Logo Design & Visual Identity</a>
+                      <a href="" className="buttons1 row1button1 Branding ml-4">Logo Design & Visual Identity</a>
                       <a href="" className="buttons1 row1button2 Branding">Branding, Strategy & Development</a>
                     </div>
                     <div className="rowFirts2-div Branding">
-                      <a href="" className="buttons1 row2button85 Branding">Rebranding</a>
+                      <a href="" className="buttons1 row2button85 Branding ml-4">Rebranding</a>
                       <a href="" className="buttons1 row2button5 Branding">Brand Elevation</a>
-                      <a href="" className="buttons1 row2button6 Branding">UI/ UX Design for Digital Products</a>
+                      <a href="" className="buttons1 row2button6 Branding 2xl:ml-8">UI/ UX Design for Digital Products</a>
                     </div>
                     <div className="rowFirts3-div">
-                      <a href="" className="buttons1 row2button52 Branding">Corporate Profile & Company Brochure</a>
-                      <a href="" className="buttons1 row2button366 Branding">Graphic Design</a>
+                      <a href="" className="buttons1 row2button52 Branding ml-4">Corporate Profile & Company Brochure</a>
+                      <a href="" className="buttons1 row2button366 Branding 2xl:ml-20">Graphic Design</a>
                     </div>
                   </div>
                 </div>
@@ -536,11 +536,11 @@ export default function Home() {
                   />
                 </svg>
               </ScrollReveal>
-              <ScrollReveal delay={0.4} className="w-full">
+              <ScrollReveal delay={0.4} className="w-full min-h-[680px]">
                 <div className="tq__FoundersGrotesk_14 uppercase relative after:content-[''] after:absolute after:top-0 after:right-0 after:w-[76%] after:h-full after:bg-[var(--foreground)]">
                   Visual Storytelling
                 </div>
-                <div className="p-8 min-h-[270px] bg-[var(--foreground)]">
+                <div className="p-8 min-h-[300px] bg-[var(--foreground)]">
                   <h3 className="tq__PPMedium__58 text-[var(--background)] mb-[16px]">
                     Communication
                   </h3>
@@ -554,11 +554,11 @@ export default function Home() {
                   <img src="/images/labuttom.png" className="buttons-Bg" alt="Buttons Background" />
                   <div className="all-buttons-texts">
                     <div className="rowFirts-div Branding Communication">
-                      <a href="" className="buttons1 row1button1 Branding Communication">Video Storyboarding & Production</a>
+                      <a href="" className="buttons1 row1button1 Branding Communication ml-6">Video Storyboarding & Production</a>
                       <a href="" className="buttons1 row1button2 Branding Communication">Photography & Visual Storytelling</a>
                     </div>
                     <div className="rowFirts2-div Branding Communication">
-                      <a href="" className="buttons1 row2button85 Branding Communication">Social Media Strategy & Design</a>
+                      <a href="" className="buttons1 row2button85 Branding Communication ml-6">Social Media Strategy & Design</a>
                       <a href="" className="buttons1 row2button5 Branding Communication">Search Engine Optimisation(SEO)</a>
                     </div>
                   </div>
