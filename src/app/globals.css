@@ -151,12 +151,12 @@ body {
 
 .tq__PPBook__58 {
   font-family: 'PP Neue Montreal Book';
-  font-size: clamp(1.5rem, 5vw, 58px);
+  font-size: clamp(1.5rem, 5vw, 40px);
 }
 
 .tq__PPMedium__58 {
   font-family: 'PP Neue Montreal';
-  font-size: clamp(1.5rem, 5vw, 58px);
+  font-size: clamp(1.5rem, 5vw, 40px);
 }
 
 .tq__PPBook__36 {
@@ -215,14 +215,7 @@ body {
 
 .tq__FoundersGrotesk_14 {
   font-family: 'Founders Grotesk';
-  font-size: clamp(16px, 2vw, 18px);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.tq__FoundersGrotesk_14:hover {
-  transform: translateY(-2px);
-  color: rgba(255, 255, 255, 0.8);
-  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+  font-size: clamp(10px, 1vw, 10px);
 }
 
 input {

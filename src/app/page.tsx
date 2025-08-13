@@ -453,7 +453,7 @@ export default function Home() {
                 <div className="tq__FoundersGrotesk_14 uppercase relative after:content-[''] after:absolute after:top-0 after:right-0 after:w-[85%] after:h-full after:bg-[var(--foreground)]">
                   Technology
                 </div>
-                <div className="p-8 min-h-[300px] bg-[var(--foreground)]">
+                <div className="p-8 h-[270px] bg-[var(--foreground)]">
                   <h3 className="tq__PPMedium__58 text-[var(--background)] mb-[16px]">
                     Web Design & Development
                   </h3>
@@ -498,7 +498,7 @@ export default function Home() {
                 <div className="tq__FoundersGrotesk_14 uppercase relative after:content-[''] after:absolute after:top-0 after:right-0 after:w-[80%] after:h-full after:bg-[var(--foreground)]">
                   Identity & Design
                 </div>
-                <div className="p-8 min-h-[300px] bg-[var(--foreground)]">
+                <div className="p-8 h-[252px] bg-[var(--foreground)]">
                   <h3 className="tq__PPMedium__58 text-[var(--background)] mb-[16px]">Branding</h3>
                   <p className="tq__FoundersGrotesk_22 font-light text-[var(--background)] mb-[32px]">
                     Crafting an effective perception of your brand, and elevating it with an
@@ -540,7 +540,7 @@ export default function Home() {
                 <div className="tq__FoundersGrotesk_14 uppercase relative after:content-[''] after:absolute after:top-0 after:right-0 after:w-[76%] after:h-full after:bg-[var(--foreground)]">
                   Visual Storytelling
                 </div>
-                <div className="p-8 min-h-[300px] bg-[var(--foreground)]">
+                <div className="p-6 h-[310px] bg-[var(--foreground)]">
                   <h3 className="tq__PPMedium__58 text-[var(--background)] mb-[16px]">
                     Communication
                   </h3>
