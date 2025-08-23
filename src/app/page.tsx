@@ -11,6 +11,7 @@ gsap.registerPlugin(ScrollTrigger)
 import AwardsSelection from '@/component/AwardsSelection'
 import Button from '@/component/Button'
 import HeroTextLine from '@/component/HeroTextAnimation'
+import AnimatedLine from '@/component/AnimatedLine'
 import ScrollReveal from '@/component/ScrollReveal'
 import ScrollShaderSlider from '@/component/ScrollShaderSlider'
 import VideoClothAnimation from '@/component/VideoClothAnimation'
@@ -309,10 +310,13 @@ export default function Home() {
         <section className="pt-[30dvh] pb-[0dvh] overflow-hidden">
           <div className="container flex justify-between m-auto">
             <div className="w-5/12 text-right">
-              <h1 className="tq__PPMedium__58 text-left w-full max-w-[800px] ml-auto bg-[var(--background)] p-[50px] -mt-[50px] relative z-1">
-                <HeroTextLine text="An Award Winning" className="block text-right" delay={0} index={0} />
-                <HeroTextLine text="Branding and Web Design" className="block" delay={0.2} index={1} />
-                <HeroTextLine text="Agency in Dubai." className="block" delay={0.4} index={2} />
+              <h1 className="tq__PPMedium__58 text-right w-full max-w-[800px] ml-auto bg-[var(--background)] p-[50px] -mt-[50px] relative z-1">
+                <HeroTextLine text="An Award Winning" className="block text-right" delay={0.1} index={0} />
+                <HeroTextLine text="Branding and Web Design" className="block" delay={0.1} index={1} />
+                <div className='flex items-center gap-2'>
+                  <HeroTextLine text="Agency in Dubai." className="block" delay={0.1} index={2} />
+                  <AnimatedLine delay={0.9} />
+                </div>
               </h1>
             </div>
             <div className="w-7/12 relative">
@@ -1248,7 +1252,7 @@ export default function Home() {
             <div className="w-6/12">
               {(() => {
                 const [openFaq, setOpenFaq] = useState<number | null>(null);
-                
+
                 const faqData = [
                   {
                     question: "What is a responsive web design, and why is it crucial for my Dubai website?",
@@ -1372,7 +1376,7 @@ export default function Home() {
                             maxHeight: openFaq === index ? '500px' : '0px',
                             opacity: openFaq === index ? 1 : 0,
                             transform: openFaq === index ? 'translateY(0px)' : 'translateY(-10px)',
-                            transition: openFaq === index 
+                            transition: openFaq === index
                               ? 'max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease, transform 0.4s ease'
                               : 'max-height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.2s ease, transform 0.2s ease'
                           }}

@@ -320,9 +320,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       // Final color calculation
       vec3 finalColor = textureColor.rgb * lighting * colorVariation + subsurface + fresnelIntensity;
       
-      // Add subtle vignette effect
-      float vignette = 1.0 - smoothstep(0.3, 1.0, length(uv - 0.5) * 1.5);
-      finalColor *= vignette;
+      // Vignette effect removed to eliminate faded corners
       
       gl_FragColor = vec4(finalColor, textureColor.a * u_opacity);
     }

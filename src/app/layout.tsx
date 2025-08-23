@@ -33,7 +33,16 @@ export default function RootLayout({
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleToggle = () => setIsOpen((prev) => !prev)
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev)
+    
+    // Auto-close after 5 seconds if opening
+    if (!isOpen) {
+      setTimeout(() => {
+        setIsOpen(false)
+      }, 3000)
+    }
+  }
 
   const menuItems = [
     'Home',
@@ -188,7 +197,7 @@ export default function RootLayout({
                     <li key={item}>
                       <a
                         href="#"
-                        className="tq__FoundersGrotesk_14"
+                        className="tq__FoundersGrotesk_20 mt-2"
                         onClick={
                           item === 'What We Do'
                             ? (e) => {
@@ -212,7 +221,7 @@ export default function RootLayout({
                     initial={{ clipPath: 'inset(100% 0% 0% 0%)', opacity: 0 }}
                     animate={{ clipPath: 'inset(0% 0% 0% 0%)', opacity: 1 }}
                     exit={{ clipPath: 'inset(100% 0% 0% 0%)', opacity: 0 }}
-                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+                    transition={{ duration: 0, ease: 'easeInOut' }}
                     className="navbar-open overflow-hidden"
                   >
                     <ul>

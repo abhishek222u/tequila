@@ -651,31 +651,6 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
               >
                 {award.category}
               </p>
-
-              <svg
-                width="22"
-                height="12"
-                viewBox="0 0 22 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{
-                  transform: isHovered ? 'translateX(12px)' : 'translateX(0px)',
-                  position: 'relative',
-                  zIndex: 20,
-                  transition: 'all 0.3s ease-out'
-                }}
-              >
-                <path
-                  d="M0.078125 6.06675H20.3441M20.3441 6.06675L14.264 1M20.3441 6.06675L14.264 11.1335"
-                  stroke={isHovered ? '#000000' : 'var(--foreground)'}
-                  strokeOpacity={isHovered ? '1' : '0.5'}
-                  strokeWidth="2.0267"
-                  strokeLinejoin="round"
-                  style={{
-                    transition: 'stroke 0.3s ease, stroke-opacity 0.3s ease'
-                  }}
-                />
-              </svg>
             </div>
           )
         })}

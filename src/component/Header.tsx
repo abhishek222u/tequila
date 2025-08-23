@@ -166,7 +166,8 @@ const Header = () => {
                 }}
                 className="tq__FoundersGrotesk_22 relative after:content-[''] after:absolute after:right-0 after:bottom-0 after:w-0 after:h-[0.5px] after:bg-white after:transition-all after:duration-700 hover:after:left-0 hover:after:w-full"
               >
-                <SplitTextEffect text={item.label} />
+                {item.label}
+                {/* <SplitTextEffect text={item.label} /> */}
               </Link>
             ))}
           </nav>
