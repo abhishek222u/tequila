@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import LenisProvider from '@/component/SmoothScrollProvider'
 import Header from '@/component/Header'
 import Footer from '@/component/Footer'
+import SplashCursor from '@/component/SplashCursor'
 
 // export const metadata: Metadata = {
 //   title: 'Tequila',
@@ -33,7 +34,16 @@ export default function RootLayout({
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleToggle = () => setIsOpen((prev) => !prev)
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev)
+    
+    // Auto-close after 5 seconds if opening
+    if (!isOpen) {
+      setTimeout(() => {
+        setIsOpen(false)
+      }, 3000)
+    }
+  }
 
   const menuItems = [
     'Home',
@@ -48,7 +58,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <Link href={'/'} className="fixed bottom-12 right-12">
+      <SplashCursor />
+        <Link href={'/'} className="fixed bottom-12 right-12 z-[9999]">
           <svg viewBox="0 0 99 101" fill="none" className="w-[100px]">
             <path
               d="M9.92225 81.2718L14.4653 75.1875L14.4306 75.1435L7.5538 78.2721L6.85107 77.3821L15.1702 73.6855L16.0465 74.7953L11.6561 80.5985L11.6908 80.6425L18.3802 77.751L19.2478 78.8498L13.7222 86.0845L12.9934 85.1615L17.5839 79.1824L17.5492 79.1385L10.625 82.1618L9.92225 81.2718Z"
@@ -188,7 +199,7 @@ export default function RootLayout({
                     <li key={item}>
                       <a
                         href="#"
-                        className="tq__FoundersGrotesk_14"
+                        className="tq__FoundersGrotesk_20 mt-2"
                         onClick={
                           item === 'What We Do'
                             ? (e) => {
@@ -212,7 +223,7 @@ export default function RootLayout({
                     initial={{ clipPath: 'inset(100% 0% 0% 0%)', opacity: 0 }}
                     animate={{ clipPath: 'inset(0% 0% 0% 0%)', opacity: 1 }}
                     exit={{ clipPath: 'inset(100% 0% 0% 0%)', opacity: 0 }}
-                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+                    transition={{ duration: 0, ease: 'easeInOut' }}
                     className="navbar-open overflow-hidden"
                   >
                     <ul>

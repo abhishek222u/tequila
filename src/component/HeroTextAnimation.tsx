@@ -14,16 +14,19 @@ interface HeroTextLineProps {
   className?: string;
   delay?: number;
   index: number;
+  showLine?: boolean;
 }
 
 const HeroTextLine: React.FC<HeroTextLineProps> = ({ 
   text, 
   className = '', 
   delay = 0,
-  index 
+  index,
+  showLine = false
 }) => {
   const textRef = useRef<HTMLSpanElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<gsap.core.Timeline | null>(null);
 
   // Optimized animation setup with useCallback
@@ -33,32 +36,30 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
     const element = textRef.current;
     const container = containerRef.current;
     
-    // Split text into characters for character-by-character animation
-    const chars = text.split('');
-    element.innerHTML = chars.map(char => 
-      char === ' ' ? '&nbsp;' : `<span class="char">${char}</span>`
-    ).join('');
+    // Set the text content directly without character splitting
+    element.textContent = text;
 
-    // Get all character spans
-    const charSpans = element.querySelectorAll('.char');
-
-    // Set initial state with optimized positioning
-    gsap.set(charSpans, {
+    // Set initial state for smooth bottom-to-top animation
+    gsap.set(element, {
       y: '100%',
       opacity: 0,
-      rotationX: 60,
-      scale: 0.85,
-      filter: 'blur(3px)',
-      color: '#6b7280',
+      scale: 0.95,
+      filter: 'blur(2px)',
       transformOrigin: 'center center'
     });
 
     // Set initial container state
     gsap.set(container, {
       opacity: 0,
-      y: 20,
+      y: 30,
       scale: 0.98
     });
+
+    // Set initial line state if showLine is true
+    if (showLine && lineRef.current) {
+      console.log('Setting up line for:', text);
+      gsap.set(lineRef.current, { width: 0 });
+    }
 
     // Create the main animation timeline with better performance
     const tl = gsap.timeline({
@@ -77,14 +78,24 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
           animationRef.current = gsap.timeline({
             onComplete: () => {
               // Add subtle floating animation after main animation
-              gsap.to(charSpans, {
-                y: '-1px',
-                duration: 3,
+              gsap.to(element, {
+                y: '-2px',
+                duration: 4,
                 ease: 'power1.inOut',
-                stagger: 0.01,
                 yoyo: true,
                 repeat: -1
               });
+
+              // Animate the line from left to right if showLine is true
+              if (showLine && lineRef.current) {
+                console.log('Animating line for:', text);
+                gsap.to(lineRef.current, {
+                  width: '100%',
+                  duration: 1.5,
+                  ease: 'power2.out',
+                  delay: 0.3
+                });
+              }
             }
           });
 
@@ -93,31 +104,21 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.6,
-            ease: 'power2.out',
+            duration: 0.8,
+            ease: 'power3.out',
             delay: delay
           });
 
-          // Animate characters in sequence with optimized effects
-          animationRef.current.to(charSpans, {
+          // Animate text with smooth bottom-to-top motion
+          animationRef.current.to(element, {
             y: '0%',
             opacity: 1,
-            rotationX: 0,
             scale: 1,
             filter: 'blur(0px)',
-            duration: 0.8,
-            ease: 'power2.out',
-            stagger: 0.03,
+            duration: 1.2,
+            ease: 'power3.out',
             delay: delay + 0.1
           }, delay + 0.1);
-
-          // Animate color from grey to white with smoother transition
-          animationRef.current.to(charSpans, {
-            color: '#ffffff',
-            duration: 1.2,
-            ease: 'power1.out',
-            delay: delay + 0.3
-          }, delay + 0.3);
         },
         onLeave: () => {
           // Smooth exit animation with better performance
@@ -125,15 +126,13 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
             animationRef.current.kill();
           }
           
-          gsap.to(charSpans, {
+          gsap.to(element, {
             y: '-60px',
             opacity: 0,
-            rotationX: -30,
             scale: 0.9,
             filter: 'blur(2px)',
             duration: 0.6,
-            ease: 'power2.in',
-            stagger: 0.015
+            ease: 'power2.in'
           });
           
           gsap.to(container, {
@@ -143,6 +142,15 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
             duration: 0.5,
             ease: 'power2.in'
           });
+
+          // Hide the line when leaving
+          if (showLine && lineRef.current) {
+            gsap.to(lineRef.current, {
+              width: 0,
+              duration: 0.4,
+              ease: 'power2.in'
+            });
+          }
         },
         onEnterBack: () => {
           // Re-animate when entering viewport again
@@ -158,17 +166,24 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
             ease: 'power2.out'
           });
 
-          gsap.to(charSpans, {
+          gsap.to(element, {
             y: '0%',
             opacity: 1,
-            rotationX: 0,
             scale: 1,
             filter: 'blur(0px)',
-            color: '#ffffff',
             duration: 0.8,
-            ease: 'power2.out',
-            stagger: 0.02
+            ease: 'power2.out'
           });
+
+          // Show the line again
+          if (showLine && lineRef.current) {
+            gsap.to(lineRef.current, {
+              width: '100%',
+              duration: 1.2,
+              ease: 'power2.out',
+              delay: 0.2
+            });
+          }
         },
         onLeaveBack: () => {
           // Reverse animation when leaving viewport backwards
@@ -176,15 +191,13 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
             animationRef.current.kill();
           }
           
-          gsap.to(charSpans, {
+          gsap.to(element, {
             y: '60px',
             opacity: 0,
-            rotationX: 30,
             scale: 0.9,
             filter: 'blur(2px)',
             duration: 0.5,
-            ease: 'power2.in',
-            stagger: 0.015
+            ease: 'power2.in'
           });
           
           gsap.to(container, {
@@ -194,26 +207,33 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
             duration: 0.4,
             ease: 'power2.in'
           });
+
+          // Hide the line when leaving backwards
+          if (showLine && lineRef.current) {
+            gsap.to(lineRef.current, {
+              width: 0,
+              duration: 0.4,
+              ease: 'power2.in'
+            });
+          }
         }
       }
     });
 
     // Add optimized hover effects for interactive feel
     const handleMouseEnter = () => {
-      gsap.to(charSpans, {
-        scale: 1.03,
-        duration: 0.2,
-        ease: 'power1.out',
-        stagger: 0.005
+      gsap.to(element, {
+        scale: 1.02,
+        duration: 0.3,
+        ease: 'power1.out'
       });
     };
 
     const handleMouseLeave = () => {
-      gsap.to(charSpans, {
+      gsap.to(element, {
         scale: 1,
-        duration: 0.2,
-        ease: 'power1.out',
-        stagger: 0.005
+        duration: 0.3,
+        ease: 'power1.out'
       });
     };
 
@@ -229,7 +249,7 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
       container.removeEventListener('mouseenter', handleMouseEnter);
       container.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [text, delay, index]);
+  }, [text, delay, index, showLine]);
 
   useEffect(() => {
     const cleanup = setupAnimation();
@@ -239,11 +259,11 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
   return (
     <div 
       ref={containerRef}
-      className={`hero-text-line-container ${className}`}
+      className={`hero-text-line-container ${className} text-[var(--foreground)]`}
       style={{ 
         display: 'block',
         position: 'relative',
-        overflow: 'hidden',
+        overflow: 'visible',
         cursor: 'default',
         willChange: 'transform, opacity'
       }}
@@ -258,6 +278,23 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
           willChange: 'transform'
         }}
       />
+      {showLine && (
+        <div 
+          ref={lineRef}
+          className="hero-text-line-underline"
+          style={{
+            position: 'absolute',
+            bottom: '-12px',
+            left: 0,
+            height: '4px',
+            backgroundColor: 'var(--foreground) !important',
+            width: 0,
+            willChange: 'width',
+            zIndex: 10,
+            boxShadow: '0 0 8px rgba(var(--foreground-rgb), 0.6)'
+          }}
+        />
+      )}
     </div>
   );
 };

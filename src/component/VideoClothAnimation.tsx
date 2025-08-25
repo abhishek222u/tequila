@@ -40,6 +40,13 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
 
+  // Function to get current theme background color
+  const getThemeBackgroundColor = useCallback(() => {
+    const root = document.documentElement
+    const bgColor = getComputedStyle(root).getPropertyValue('--background')
+    return bgColor.trim() === '#f9f8fc' ? 0xf9f8fc : 0x000000
+  }, [])
+
   // Enhanced Vertex Shader with advanced physics and realistic cloth simulation
   const vertexShader = `
     uniform float u_time;
@@ -320,9 +327,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       // Final color calculation
       vec3 finalColor = textureColor.rgb * lighting * colorVariation + subsurface + fresnelIntensity;
       
-      // Add subtle vignette effect
-      float vignette = 1.0 - smoothstep(0.3, 1.0, length(uv - 0.5) * 1.5);
-      finalColor *= vignette;
+      // Vignette effect removed to eliminate faded corners
       
       gl_FragColor = vec4(finalColor, textureColor.a * u_opacity);
     }
@@ -352,7 +357,9 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
     })
     renderer.setSize(containerWidth, containerHeight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    renderer.setClearColor(0x000000, 1)
+    
+    // Use theme-aware background color
+    renderer.setClearColor(getThemeBackgroundColor(), 1)
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
     renderer.toneMapping = THREE.ACESFilmicToneMapping
@@ -535,6 +542,17 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
     })
   }, [triggerOnScroll, isExpanded, calculatePositions, onAnimationComplete])
 
+  // Function to update renderer background color based on current theme
+  const updateThemeBackground = useCallback(() => {
+    if (!rendererRef.current) return
+    
+    const root = document.documentElement
+    const bgColor = getComputedStyle(root).getPropertyValue('--background')
+    const themeColor = bgColor.trim() === '#f9f8fc' ? 0xf9f8fc : 0x000000
+    
+    rendererRef.current.setClearColor(themeColor, 1)
+  }, [])
+
   const handleResize = useCallback(() => {
     if (!containerRef.current || !rendererRef.current || !cameraRef.current || !meshRef.current)
       return
@@ -587,11 +605,29 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
       setupScrollAnimation()
     }, 500)
 
+    // Theme change observer
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+          updateThemeBackground()
+        }
+      })
+    })
+
+    // Observe theme changes on document root
+    if (typeof document !== 'undefined') {
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['style']
+      })
+    }
+
     window.addEventListener('resize', handleResize)
     window.addEventListener('mousemove', handleMouseMove)
 
     return () => {
       clearTimeout(timer)
+      observer.disconnect()
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('mousemove', handleMouseMove)
       if (animationFrameRef.current) {
@@ -611,7 +647,7 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
         videoRef.current.src = ''
       }
     }
-  }, [initThreeJS, animate, setupScrollAnimation, handleResize, handleMouseMove])
+  }, [initThreeJS, animate, setupScrollAnimation, handleResize, handleMouseMove, updateThemeBackground])
 
   useEffect(() => {
     if (videoLoaded) {
@@ -623,9 +659,9 @@ const VideoClothAnimation: React.FC<VideoClothAnimationProps> = ({
   }, [videoLoaded, setupScrollAnimation])
 
   return (
-    <div ref={containerRef} className={`relative w-full ${className}`} style={{ height: '150vh' }}>
-      <div className="sticky top-0 w-full h-screen bg-black">
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+    <div ref={containerRef} className={`relative w-full bg-[var(--background)] ${className}`} style={{ height: '150vh' }}>
+      <div className="sticky top-0 w-full h-screen bg-[var(--background)]">
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full bg-[var(--background)]" />
       </div>
     </div>
   )
