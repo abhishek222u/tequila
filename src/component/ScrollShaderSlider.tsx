@@ -11,7 +11,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
     // Slide 1
     <div key={0} className="w-full flex justify-between items-start gap-[32px] px-8 py-16">
       <div className="w-7/12 relative">
-        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+        <div className="!bg-[var(--background)] !text-[var(--foreground)] p-2 absolute -top-3 left-0">
           Branding, Website
         </div>
         <video
@@ -31,7 +31,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '500',
-            color: '#ffffff',
+            color: 'var(--foreground)',
             fontFamily: 'PP Neue Montreal Book, system-ui, sans-serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -45,7 +45,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '400',
-            color: '#cccccc',
+            color: 'var(--foreground)',
             fontFamily: 'Instrument Serif, Georgia, serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -57,7 +57,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
         </h3>
       </div>
       <div className="w-5/12 relative">
-        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+        <div className=" !bg-[var(--background)] !text-[var(--foreground)] p-2 absolute -top-3 left-0">
           Branding, Website
         </div>
         <video
@@ -77,7 +77,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '500',
-            color: '#ffffff',
+            color: 'var(--foreground)',
             fontFamily: 'PP Neue Montreal Book, system-ui, sans-serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -91,7 +91,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '400',
-            color: '#cccccc',
+            color: 'var(--foreground)',
             fontFamily: 'Instrument Serif, Georgia, serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -107,7 +107,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
     // Slide 2
     <div key={1} className="w-full flex justify-between items-start gap-[32px] px-8 py-16">
       <div className="w-5/12 relative">
-        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+        <div className=" !bg-[var(--background)] !text-[var(--foreground)] p-2 absolute -top-3 left-0">
           Branding, Website
         </div>
         <video
@@ -127,7 +127,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '500',
-            color: '#ffffff',
+            color: 'var(--foreground)',
             fontFamily: 'PP Neue Montreal Book, system-ui, sans-serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -141,7 +141,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '400',
-            color: '#cccccc',
+            color: 'var(--foreground)',
             fontFamily: 'Instrument Serif, Georgia, serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -153,7 +153,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
         </h3>
       </div>
       <div className="w-7/12 relative">
-        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+        <div className=" !bg-[var(--background)] !text-[var(--foreground)] p-2 absolute -top-3 left-0">
           Branding, Website
         </div>
         <video
@@ -173,7 +173,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '500',
-            color: '#ffffff',
+            color: 'var(--foreground)',
             fontFamily: 'PP Neue Montreal Book, system-ui, sans-serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -187,7 +187,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '400',
-            color: '#cccccc',
+            color: 'var(--foreground)',
             fontFamily: 'Instrument Serif, Georgia, serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -203,7 +203,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
     // Slide 3
     <div key={2} className="w-full flex justify-between items-start gap-[32px] px-8 py-16">
       <div className="w-7/12 relative">
-        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+        <div className=" !bg-[var(--background)] !text-[var(--foreground)] p-2 absolute -top-3 left-0">
           Branding, Website
         </div>
         <video
@@ -223,7 +223,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '500',
-            color: '#ffffff',
+            color: 'var(--foreground)',
             fontFamily: 'PP Neue Montreal Book, system-ui, sans-serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -237,7 +237,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '400',
-            color: '#cccccc',
+            color: 'var(--foreground)',
             fontFamily: 'Instrument Serif, Georgia, serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -249,7 +249,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
         </h3>
       </div>
       <div className="w-5/12 relative">
-        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+        <div className=" !bg-[var(--background)] !text-[var(--foreground)] p-2 absolute -top-3 left-0">
           Branding, Website
         </div>
         <video
@@ -269,7 +269,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '500',
-            color: '#ffffff',
+            color: 'var(--foreground)',
             fontFamily: 'PP Neue Montreal Book, system-ui, sans-serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -283,7 +283,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           style={{
             fontSize: '48px',
             fontWeight: '400',
-            color: '#cccccc',
+            color: 'var(--foreground)',
             fontFamily: 'Instrument Serif, Georgia, serif',
             textRendering: 'optimizeLegibility',
             WebkitFontSmoothing: 'antialiased',
@@ -676,7 +676,7 @@ const ScrollShaderSlider = () => {
       </div>
 
       {/* Main section with loading state */}
-      <section ref={sectionRef} className="relative h-[350vh] bg-black">
+      <section ref={sectionRef} className="relative h-[350vh] bg-[var(--background)]">
         <div className="sticky top-0 h-screen w-full">
           {isLoading ? (
             <div className="flex items-center justify-center h-full">

@@ -226,8 +226,8 @@ const Header = () => {
                 onChange={toggleTheme}
                 className="sr-only peer"
               />
-              <div className="bg-gray-400 peer-checked:bg-green-500 w-full h-full rounded-full transition-colors duration-300"></div>
-              <div className="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-5"></div>
+              <div className="bg-[var(--foreground)] opacity-30 peer-checked:bg-[var(--foreground)] peer-checked:opacity-100 w-full h-full rounded-full transition-all duration-300"></div>
+              <div className="absolute top-0.5 left-0.5 w-6 h-6 bg-[var(--background)] rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-5"></div>
             </label>
           </div>
         </div>
@@ -235,8 +235,8 @@ const Header = () => {
 
       <div
         ref={subNavRef}
-        className="sub-navigation border-t-[0.5px] border-[rgba(255,255,255,0.3)]"
-        style={{ height: 0, overflow: 'hidden', opacity: 0, display: 'none' }}
+        className="sub-navigation border-t-[0.5px] border-[var(--foreground)]"
+        style={{ height: 0, overflow: 'hidden', opacity: 0, display: 'none', borderColor: 'rgba(var(--foreground-rgb), 0.3)' }}
         onMouseEnter={() => {
           if (hoverTimeout.current) clearTimeout(hoverTimeout.current)
           setActiveMenu('what-we-do')

@@ -51,7 +51,7 @@ const AnimatedLine: React.FC<AnimatedLineProps> = ({
       className={`animated-line ${className}`}
       style={{
         height: '3px',
-        backgroundColor: '#ffffff',
+        backgroundColor: 'var(--foreground)',
         width: '44.5%',
         // marginLeft: '8px',
         flexShrink: 0

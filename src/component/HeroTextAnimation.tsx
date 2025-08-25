@@ -287,11 +287,11 @@ const HeroTextLine: React.FC<HeroTextLineProps> = ({
             bottom: '-12px',
             left: 0,
             height: '4px',
-            backgroundColor: '#ffffff',
+            backgroundColor: 'var(--foreground) !important',
             width: 0,
             willChange: 'width',
             zIndex: 10,
-            boxShadow: '0 0 8px rgba(255, 255, 255, 0.6)'
+            boxShadow: '0 0 8px rgba(var(--foreground-rgb), 0.6)'
           }}
         />
       )}

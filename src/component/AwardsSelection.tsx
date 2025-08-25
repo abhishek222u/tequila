@@ -79,7 +79,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
     // Background plane
     const backgroundGeometry = new THREE.PlaneGeometry(rect.width, 100)
     const backgroundMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
+      color: 0xf9f8fc, // Use foreground color
       transparent: true,
       opacity: 0
     })
@@ -578,7 +578,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
   return (
     <div
       ref={containerRef}
-      className={`relative w-full bg-black text-white font-mono overflow-visible ${className}`}
+      className={`relative w-full bg-[var(--background)] text-[var(--foreground)] font-mono overflow-visible ${className}`}
       onMouseLeave={handleContainerLeave}
       style={{ height: 'auto', minHeight: '600px' }}
     >
@@ -604,14 +604,14 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
               ref={(el) => {
                 rowRefs.current[index] = el
               }}
-              className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[#6E6E6E] cursor-pointer"
-              style={{
-                color: isHovered ? '#000000' : 'inherit',
-                position: 'relative',
-                zIndex: isHovered ? 15 : 10,
-                transform: isHovered ? 'translateX(6px)' : 'translateX(0px)',
-                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-              }}
+              className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] border-b-[0.5px] border-[var(--foreground)] cursor-pointer"
+                              style={{
+                  color: isHovered ? (document.documentElement.style.getPropertyValue('--background') === '#f9f8fc' ? '#000000' : '#f9f8fc') : 'inherit',
+                  position: 'relative',
+                  zIndex: isHovered ? 15 : 10,
+                  transform: isHovered ? 'translateX(6px)' : 'translateX(0px)',
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }}
               onMouseMove={(e) => handleMouseMove(e, index)}
               onMouseEnter={(e) => handleRowEnter(index, e)}
               onMouseLeave={() => handleRowLeave(index)}
@@ -619,7 +619,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
               <p
                 className="tq__FoundersGrotesk_22 w-3/12"
                 style={{
-                  color: isHovered ? '#000000' : 'inherit',
+                  color: isHovered ? (document.documentElement.style.getPropertyValue('--foreground') === '#f9f8fc' ? '#f9f8fc' : '#000000') : 'inherit',
                   position: 'relative',
                   zIndex: 20,
                   transition: 'color 0.3s ease'
@@ -631,7 +631,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
               <p
                 className="tq__FoundersGrotesk_22 w-3/12"
                 style={{
-                  color: isHovered ? '#000000' : 'inherit',
+                  color: isHovered ? (document.documentElement.style.getPropertyValue('--foreground') === '#f9f8fc' ? '#f9f8fc' : '#000000') : 'inherit',
                   position: 'relative',
                   zIndex: 20,
                   transition: 'color 0.3s ease'
@@ -643,7 +643,7 @@ const AwardsSelection: React.FC<AwardsSelectionProps> = ({ awards, className = '
               <p
                 className="tq__FoundersGrotesk_22 w-full"
                 style={{
-                  color: isHovered ? '#000000' : 'inherit',
+                  color: isHovered ? (document.documentElement.style.getPropertyValue('--foreground') === '#f9f8fc' ? '#f9f8fc' : '#000000') : 'inherit',
                   position: 'relative',
                   zIndex: 20,
                   transition: 'color 0.3s ease'

@@ -391,9 +391,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = () => {
                             <div className="w-[500px] h-[600px] bg-black flex flex-col justify-end p-[64px]">
                                 <div className="mb-8">
                                     <p className="text-white text-sm uppercase tracking-wider mb-4">CREATIVE DESIGN AGENCY</p>
-                                    <div className="w-16 h-16 bg-gradient-to-br from-green-800 to-black flex items-center justify-center mb-6">
-                                        <span className="text-white text-sm uppercase tracking-wider">-ART-</span>
-                                    </div>
+                                    
                                 </div>
                                 <div className="mb-8">
                                     <h3 className="text-white text-4xl font-serif mb-6 leading-tight">
@@ -449,7 +447,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = () => {
                         className="w-12 h-12  flex items-center justify-center transition-all duration-500 group cursor-pointer"
                         aria-label="Scroll left"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" className="text-white" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" className="text-[var(--foreground)]" fill="currentColor">
                             <path d="M6.5 5.999l.707.707L1.914 12H23v1H1.914l5.294 5.295-.707.707L0 12.499l6.5-6.5z" />
                         </svg>
                     </button>
@@ -458,7 +456,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = () => {
                         className="w-12 h-12  flex items-center justify-center transition-all duration-500 group  cursor-pointer"
                         aria-label="Scroll right"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" className="text-white" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" className="text-[var(--foreground)]" fill="currentColor">
                             <path d="m17.5 5.999-.707.707 5.293 5.293H1v1h21.086l-5.294 5.295.707.707L24 12.499l-6.5-6.5z" />
                         </svg>
                     </button>
