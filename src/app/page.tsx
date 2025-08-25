@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -15,6 +15,7 @@ import AnimatedLine from '@/component/AnimatedLine'
 import ScrollReveal from '@/component/ScrollReveal'
 import ScrollShaderSlider from '@/component/ScrollShaderSlider'
 import VideoClothAnimation from '@/component/VideoClothAnimation'
+import TestimonialsSection from '@/component/TestimonialsSection'
 
 import insights1 from '../../public/images/insights1.jpg'
 import insights2 from '../../public/images/insights2.jpg'
@@ -71,238 +72,17 @@ export default function Home() {
     }
   ]
 
-  // Testimonial slider state and functions
-  const [scrollPosition, setScrollPosition] = useState(0)
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
-  const sliderRef = useRef<HTMLDivElement>(null)
+  // Animation timeline ref for other animations
   const animationTimelineRef = useRef<gsap.core.Timeline | null>(null)
 
-  const totalSlides = 3
-
-  // Optimized slide transition function
-  const animateSlideTransition = useCallback((fromSlide: number, toSlide: number, newPosition: number) => {
-    // Kill any existing animations for better performance
-    if (animationTimelineRef.current) {
-      animationTimelineRef.current.kill();
-    }
-
-    // Create new optimized timeline
-    animationTimelineRef.current = gsap.timeline({
-      onComplete: () => {
-        setScrollPosition(newPosition);
-        setCurrentSlide(toSlide);
-      }
-    });
-
-    // Animate current slide out with smoother easing
-    animationTimelineRef.current.to(`[data-slide="${fromSlide}"]`, {
-      opacity: 0.4,
-      scale: 0.96,
-      duration: 0.5,
-      ease: "power2.out"
-    });
-
-    // Animate new slide in with better timing
-    animationTimelineRef.current.to(`[data-slide="${toSlide}"]`, {
-      opacity: 1,
-      scale: 1,
-      duration: 0.5,
-      delay: 0.1,
-      ease: "power2.out"
-    }, 0.1);
-
-    // Smooth slide transition with better easing
-    animationTimelineRef.current.to(sliderRef.current, {
-      x: newPosition,
-      duration: 1.0,
-      ease: "power2.out"
-    }, 0);
-  }, []);
-
-  const scrollLeft = () => {
-    if (currentSlide > 0) {
-      const newSlide = currentSlide - 1
-      const newPosition = scrollPosition + getSlideWidth()
-      animateSlideTransition(currentSlide, newSlide, newPosition);
-    } else {
-      // Loop to last slide with smooth transition
-      const lastSlide = totalSlides - 1
-      const newPosition = -(lastSlide * getSlideWidth())
-      animateSlideTransition(currentSlide, lastSlide, newPosition);
-    }
-  }
-
-  const scrollRight = () => {
-    if (currentSlide < totalSlides - 1) {
-      const newSlide = currentSlide + 1
-      const newPosition = scrollPosition - getSlideWidth()
-      animateSlideTransition(currentSlide, newSlide, newPosition);
-    } else {
-      // Loop back to first slide with smooth transition
-      const newPosition = 0
-      animateSlideTransition(currentSlide, 0, newPosition);
-    }
-  }
-
-  const getSlideWidth = () => {
-    if (sliderRef.current) {
-      const firstSlide = sliderRef.current.children[0] as HTMLElement
-      if (firstSlide) {
-        return firstSlide.offsetWidth + 24 // 24px is the gap
-      }
-    }
-    return 800 // fallback width
-  }
-
-  const openVideoPreview = (videoSrc: string) => {
-    console.log('Opening video preview:', videoSrc)
-    setSelectedVideo(videoSrc)
-    setIsVideoModalOpen(true)
-    // Prevent body scroll when modal is open
-    document.body.style.overflow = 'hidden'
-
-    // Enhanced modal animation
-    gsap.fromTo('.video-modal-content', {
-      opacity: 0,
-      scale: 0.8,
-      y: 50
-    }, {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      duration: 0.6,
-      ease: "power2.out"
-    });
-  }
-
-  const closeVideoPreview = () => {
-    console.log('Closing video preview')
-
-    // Enhanced close animation
-    gsap.to('.video-modal-content', {
-      opacity: 0,
-      scale: 0.8,
-      y: 50,
-      duration: 0.4,
-      ease: "power2.in",
-      onComplete: () => {
-        setIsVideoModalOpen(false)
-        setSelectedVideo(null)
-        // Restore body scroll
-        document.body.style.overflow = 'unset'
-      }
-    });
-  }
-
-  // Reset scroll position when component unmounts
+  // Reset animation timeline when component unmounts
   useEffect(() => {
     return () => {
-      setScrollPosition(0)
-      setCurrentSlide(0)
       if (animationTimelineRef.current) {
         animationTimelineRef.current.kill();
       }
     }
   }, [])
-
-  // Add smooth entrance animations for slides with better performance
-  useEffect(() => {
-    if (sliderRef.current) {
-      // Kill any existing animations
-      gsap.killTweensOf('.testimonial-slide');
-
-      // Animate all slides in with staggered delay and better easing
-      gsap.fromTo(
-        '.testimonial-slide',
-        {
-          opacity: 0,
-          y: 60,
-          scale: 0.9,
-          filter: 'blur(3px)'
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          filter: 'blur(0px)',
-          duration: 1.2,
-          stagger: 0.15,
-          ease: "power2.out",
-          delay: 0.3
-        }
-      )
-    }
-  }, [])
-
-  // Debug video modal state
-  useEffect(() => {
-    console.log('Video modal state:', { isVideoModalOpen, selectedVideo })
-  }, [isVideoModalOpen, selectedVideo])
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
-        scrollLeft()
-      } else if (e.key === 'ArrowRight') {
-        scrollRight()
-      } else if (e.key === 'Escape' && isVideoModalOpen) {
-        closeVideoPreview()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentSlide, scrollPosition, isVideoModalOpen, scrollLeft, scrollRight, closeVideoPreview])
-
-  // Touch/swipe support for mobile with better performance
-  useEffect(() => {
-    if (!sliderRef.current) return
-
-    let startX = 0
-    let currentX = 0
-    let isSwiping = false
-
-    const handleTouchStart = (e: TouchEvent) => {
-      startX = e.touches[0].clientX
-      isSwiping = true
-    }
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isSwiping) return
-      currentX = e.touches[0].clientX
-    }
-
-    const handleTouchEnd = () => {
-      if (!isSwiping) return
-
-      const diff = startX - currentX
-      const threshold = 50
-
-      if (Math.abs(diff) > threshold) {
-        if (diff > 0) {
-          scrollRight()
-        } else {
-          scrollLeft()
-        }
-      }
-
-      isSwiping = false
-    }
-
-    const slider = sliderRef.current
-    slider.addEventListener('touchstart', handleTouchStart, { passive: true })
-    slider.addEventListener('touchmove', handleTouchMove, { passive: true })
-    slider.addEventListener('touchend', handleTouchEnd, { passive: true })
-
-    return () => {
-      slider.removeEventListener('touchstart', handleTouchStart)
-      slider.removeEventListener('touchmove', handleTouchMove)
-      slider.removeEventListener('touchend', handleTouchEnd)
-    }
-  }, [scrollLeft, scrollRight])
 
   return (
     <>
@@ -470,15 +250,15 @@ export default function Home() {
                 <div className="transparent-buttons-block relative ">
                   <img src="/images/teq-buttons.png" className="w-full" alt="" />
                   <div className="all-buttons-texts">
-                    <div className="rowFirts-div">
+                    <div className="rowFirts-div !mt-2">
                       <a href="" className="buttons1 row1button1 ml-3.5">Custom Website Design & Development</a>
-                      <a href="" className="buttons1 row1button2">Domain & Hosting Management</a>
+                      <a href="" className="buttons1 row1button2 !ml-18">Domain & Hosting Management</a>
                     </div>
-                    <div className="rowFirts2-div">
+                    <div className="rowFirts2-div !mt-4.5">
                       <a href="" className="buttons1 row2button2 ml-3.5">Ecommerce Website Design &
                         Development</a>
                     </div>
-                    <div className="rowFirts3-div">
+                    <div className="rowFirts3-div !mt-5">
                       <a href="" className="buttons1 row2button2 ml-3.5">Website Maintenance & Support</a>
                       <a href="" className="buttons1 row2button2 ml-24">Web Applications Design &
                         Development</a>
@@ -521,7 +301,7 @@ export default function Home() {
                       <a href="" className="buttons1 row2button5 Branding">Brand Elevation</a>
                       <a href="" className="buttons1 row2button6 Branding 2xl:ml-8">UI/ UX Design for Digital Products</a>
                     </div>
-                    <div className="rowFirts3-div">
+                    <div className="rowFirts3-div !mt-5">
                       <a href="" className="buttons1 row2button52 Branding ml-4">Corporate Profile & Company Brochure</a>
                       <a href="" className="buttons1 row2button366 Branding 2xl:ml-20">Graphic Design</a>
                     </div>
@@ -903,314 +683,7 @@ export default function Home() {
           <ScrollShaderSlider />
         </section>
 
-        <section className="py-[150px] w-screen overflow-hidden">
-          <div className="container flex justify-between items-end m-auto">
-            <div className="w-6/12">
-              {/* <h2 className="tq__PPBook__100 mb-[64px]">Testimonials</h2> */}
-              <HeroTextLine text="Testimonials" className="tq__PPBook__100 block text-3xl" delay={0} index={34} />
-              <h3 className="tq__Instrument_36 mb-[64px]">
-                <HeroTextLine text="Don't worry if you can't find your" className="block" delay={0} index={11} />
-                <HeroTextLine text="question in the list given, ask us directly" className="block" delay={0.2} index={12} />
-                <HeroTextLine text="we are here for you." className="block" delay={0.4} index={13} />
-              </h3>
-            </div>
-            <div className="w-6/12"></div>
-          </div>
-          <div className="container m-auto relative">
-            {/* Progress Bar */}
-            <div className="w-full h-2 bg-[var(--foreground)] opacity-20 mb-8 rounded-full overflow-hidden shadow-inner">
-              <div
-                className="h-full bg-[var(--foreground)] transition-all duration-1000 ease-out rounded-full shadow-lg relative overflow-hidden"
-                style={{ width: `${((currentSlide + 1) / totalSlides) * 100}%` }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-pulse" />
-              </div>
-            </div>
-
-            <div className="testimonial-slider-container overflow-hidden relative" role="region" aria-label="Testimonials slider">
-              <div
-                ref={sliderRef}
-                className="testimonial-slider flex items-center gap-[24px] will-change-transform cursor-grab active:cursor-grabbing select-none"
-                style={{ transform: `translateX(${scrollPosition}px)` }}
-                role="list"
-              >
-                <div
-                  className="testimonial-slide flex items-start gap-[24px] min-w-max opacity-90 hover:opacity-100 transition-all duration-500 hover:scale-[1.02]"
-                  role="listitem"
-                  data-slide="0"
-                >
-                  <div className="relative group">
-                    <div
-                      className="w-[60vh] h-[65vh] mb-[24px] rounded-lg shadow-2xl bg-black transform transition-all duration-700 hover:scale-105 cursor-pointer relative overflow-hidden"
-                      onClick={() => {
-                        console.log('Video 1 wrapper clicked!')
-                        openVideoPreview("/videos/testimonial1.mp4")
-                      }}
-                    >
-                      <video
-                        className="w-full h-full object-cover"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        src="/videos/testimonial1.mp4"
-                      />
-                      {/* Play button overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
-                        <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-500">
-                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-end p-[64px] border-[0.5px] border-[var(--foreground)] w-[50vh] h-[65vh] rounded-lg backdrop-blur-sm shadow-xl transform transition-all duration-700 hover:shadow-2xl">
-                    <div className="transform transition-all duration-700 hover:translate-y-[-8px]">
-                      <h3 className="tq__Instrument_58 mb-[32px] transform transition-all duration-700 hover:scale-105">
-                        "Exceptional Creativity and Professionalism!"
-                      </h3>
-                      <p className="tq__FoundersGrotesk_22 mb-[32px] transform transition-all duration-700 hover:translate-x-2">
-                        Working with Team Tequila has been an absolutely incredible experience! From
-                        the very first interaction, it was evident that this team is not just about
-                        delivering web design services—they are brand creators who truly elevate your
-                        imagination.
-                      </p>
-                      <p className="tq__FoundersGrotesk_22 uppercase transform transition-all duration-700 hover:scale-105">Ravi Kotwani</p>
-                      <p className="tq__FoundersGrotesk_22 uppercase opacity-50 transform transition-all duration-700 hover:opacity-70">CEO, XTASY</p>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="testimonial-slide flex items-start gap-[24px] min-w-max opacity-90 hover:opacity-100 transition-all duration-500 hover:scale-[1.02]"
-                  role="listitem"
-                  data-slide="1"
-                >
-                  <div className="relative group">
-                    <div
-                      className="w-[60vh] h-[65vh] mb-[24px] rounded-lg shadow-2xl bg-black transform transition-all duration-700 hover:scale-105 cursor-pointer relative overflow-hidden"
-                      onClick={() => {
-                        console.log('Video 2 wrapper clicked!')
-                        openVideoPreview("/videos/testimonial2.mp4")
-                      }}
-                    >
-                      <video
-                        className="w-full h-full object-cover"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        src="/videos/testimonial2.mp4"
-                      />
-                      {/* Play button overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
-                        <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-500">
-                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-end p-[64px] border-[0.5px] border-[var(--foreground)] w-[50vh] h-[65vh] rounded-lg backdrop-blur-sm shadow-xl transform transition-all duration-700 hover:shadow-2xl">
-                    <div className="transform transition-all duration-700 hover:translate-y-[-8px]">
-                      <h3 className="tq__FoundersGrotesk_22 mb-[32px] transform transition-all duration-700 hover:scale-105">
-                        "Outstanding Results and Innovation!"
-                      </h3>
-                      <p className="tq__FoundersGrotesk_22 mb-[32px] transform transition-all duration-700 hover:translate-x-2">
-                        The level of creativity and attention to detail that Team Tequila brings to
-                        every project is simply remarkable. They transformed our vision into a
-                        stunning digital reality that exceeded all expectations.
-                      </p>
-                      <p className="tq__FoundersGrotesk_22 uppercase transform transition-all duration-700 hover:scale-105">Sarah Johnson</p>
-                      <p className="tq__FoundersGrotesk_22 uppercase opacity-50 transform transition-all duration-700 hover:opacity-70">Founder, TechFlow</p>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="testimonial-slide flex items-start gap-[24px] min-w-max opacity-90 hover:opacity-100 transition-all duration-500 hover:scale-[1.02]"
-                  role="listitem"
-                  data-slide="2"
-                >
-                  <div className="relative group">
-                    <div
-                      className="w-[60vh] h-[65vh] mb-[24px] rounded-lg shadow-2xl bg-black transform transition-all duration-700 hover:scale-105 cursor-pointer relative overflow-hidden"
-                      onClick={() => {
-                        console.log('Video 3 wrapper clicked!')
-                        openVideoPreview("/videos/testimonial3.mp4")
-                      }}
-                    >
-                      <video
-                        className="w-full h-full object-cover"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        src="/videos/testimonial3.mp4"
-                      />
-                      {/* Play button overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
-                        <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-500">
-                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-end p-[64px] border-[0.5px] border-[var(--foreground)] w-[50vh] h-[65vh] rounded-lg backdrop-blur-sm shadow-xl transform transition-all duration-700 hover:shadow-2xl">
-                    <div className="transform transition-all duration-700 hover:translate-y-[-8px]">
-                      <h3 className="tq__FoundersGrotesk_22 mb-[32px] transform transition-all duration-700 hover:scale-105">
-                        "Transformative Digital Experience!"
-                      </h3>
-                      <p className="tq__FoundersGrotesk_22 mb-[32px] transform transition-all duration-700 hover:translate-x-2">
-                        Team Tequila didn't just build a website—they created an immersive digital
-                        journey that perfectly captures our brand essence. The results speak for
-                        themselves.
-                      </p>
-                      <p className="tq__FoundersGrotesk_22 uppercase transform transition-all duration-700 hover:scale-105">Michael Chen</p>
-                      <p className="tq__FoundersGrotesk_22 uppercase opacity-50 transform transition-all duration-700 hover:opacity-70">Creative Director, StudioX</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Navigation Arrows */}
-            <div className="absolute bottom-8 right-8 flex items-center gap-4 z-10 sm:bottom-12 sm:right-12 animate-fade-in">
-              <button
-                onClick={scrollLeft}
-                className="w-12 h-12 rounded-full border border-[var(--foreground)] flex items-center justify-center transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-[var(--foreground)] focus:ring-opacity-50 hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:scale-110 hover:shadow-2xl"
-                aria-label="Scroll left"
-              >
-                <svg
-                  className="w-5 h-5 transition-all duration-500 group-hover:scale-125 group-hover:rotate-12"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              {/* Slide Indicators */}
-              <div className="flex items-center gap-2">
-                {Array.from({ length: totalSlides }, (_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      const newPosition = -index * getSlideWidth()
-
-                      // Animate current slide out
-                      gsap.to(`[data-slide="${currentSlide}"]`, {
-                        opacity: 0.3,
-                        scale: 0.95,
-                        duration: 0.4,
-                        ease: "power2.out"
-                      })
-
-                      // Animate new slide in
-                      gsap.to(`[data-slide="${index}"]`, {
-                        opacity: 1,
-                        scale: 1,
-                        duration: 0.4,
-                        delay: 0.2,
-                        ease: "power2.out"
-                      })
-
-                      gsap.to(sliderRef.current, {
-                        x: newPosition,
-                        duration: 1.2,
-                        ease: "power3.out"
-                      })
-                      setScrollPosition(newPosition)
-                      setCurrentSlide(index)
-                    }}
-                    className={`w-3 h-3 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)] focus:ring-opacity-50 hover:scale-125 ${index === currentSlide
-                      ? 'bg-[var(--foreground)] scale-150 shadow-lg'
-                      : 'bg-[var(--foreground)] opacity-30 hover:opacity-80 hover:scale-110'
-                      }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-                <span className="text-xs opacity-50 ml-2">∞</span>
-              </div>
-
-              <button
-                onClick={scrollRight}
-                className="w-12 h-12 rounded-full border border-[var(--foreground)] flex items-center justify-center transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-[var(--foreground)] focus:ring-opacity-50 hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:scale-110 hover:shadow-2xl"
-                aria-label="Scroll right"
-              >
-                <svg
-                  className="w-5 h-5 transition-all duration-500 group-hover:scale-125 group-hover:-rotate-12"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Video Preview Modal */}
-          {isVideoModalOpen && selectedVideo && (
-            <div
-              className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-red-500/20"
-              onClick={closeVideoPreview}
-            >
-              {/* Backdrop with blur effect */}
-              <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
-
-              {/* Modal content */}
-              <div
-                className="relative z-10 max-w-4xl w-full max-h-[90vh] video-modal-content"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Close button */}
-                <button
-                  onClick={closeVideoPreview}
-                  className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 hover:scale-110 hover:rotate-90 z-20 group"
-                  aria-label="Close video preview"
-                >
-                  <svg className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-
-                {/* Video container with proper aspect ratio */}
-                <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl bg-black">
-
-                  <video
-                    className="w-full h-full object-cover"
-                    autoPlay
-                    loop
-                    playsInline
-                    controls
-                    src={selectedVideo}
-                    onLoadStart={() => {
-                      // Add loading state if needed
-                    }}
-                  />
-
-                  {/* Video overlay with play indicator */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Video info overlay */}
-                <div className="mt-4 text-center">
-                  <p className="text-white/80 text-sm">Click outside or press ESC to close</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </section>
+        <TestimonialsSection />
 
         <section className="py-[150px]">
           <div className="container m-auto">
@@ -1409,7 +882,10 @@ export default function Home() {
                   <HeroTextLine text="The Seven Pillars of Building a" className="block" delay={0} index={17} />
                   <HeroTextLine text="Premium Brand in UAE." className="block" delay={0.2} index={18} />
                 </h4>
-                <ScrollReveal delay={0.3}>
+                <ScrollReveal delay={0.3} className='relative'>
+                  <div className='bg-black absolute top-0 left-0 text-white z-50 px-2 uppercase'>
+                  branding, business
+                  </div>
                   <Image
                     src={insights1}
                     width={insights1.width}
@@ -1427,7 +903,10 @@ export default function Home() {
                   <HeroTextLine text="The Seven Pillars of Building a" className="block" delay={0} index={19} />
                   <HeroTextLine text="Premium Brand in UAE." className="block" delay={0.2} index={20} />
                 </h4>
-                <ScrollReveal delay={0.3}>
+                <ScrollReveal delay={0.3} className='relative'>
+                  <div className='bg-black absolute top-0 left-0 text-white z-50 px-2 uppercase'>
+                    branding
+                  </div>
                   <Image
                     src={insights2}
                     width={insights2.width}

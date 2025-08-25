@@ -10,7 +10,10 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
   const slideContents = useMemo(() => [
     // Slide 1
     <div key={0} className="w-full flex justify-between items-start gap-[32px] px-8 py-16">
-      <div className="w-7/12">
+      <div className="w-7/12 relative">
+        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+          Branding, Website
+        </div>
         <video
           className="w-full mb-[24px]"
           autoPlay
@@ -21,7 +24,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           src="/videos/case-study1.mp4"
           style={{ maxWidth: 'inherit', maxHeight: 'inherit' }}
           onCanPlay={(e) => {
-            e.currentTarget.play().catch(() => {})
+            e.currentTarget.play().catch(() => { })
           }}
         />
         <h3
@@ -53,7 +56,10 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           Fashion Design UAE
         </h3>
       </div>
-      <div className="w-5/12">
+      <div className="w-5/12 relative">
+        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+          Branding, Website
+        </div>
         <video
           className="w-full mb-[24px]"
           autoPlay
@@ -64,7 +70,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           src="/videos/case-study2.mp4"
           style={{ maxWidth: 'inherit', maxHeight: 'inherit' }}
           onCanPlay={(e) => {
-            e.currentTarget.play().catch(() => {})
+            e.currentTarget.play().catch(() => { })
           }}
         />
         <h3
@@ -100,7 +106,10 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
 
     // Slide 2
     <div key={1} className="w-full flex justify-between items-start gap-[32px] px-8 py-16">
-      <div className="w-5/12">
+      <div className="w-5/12 relative">
+        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+          Branding, Website
+        </div>
         <video
           className="w-full mb-[24px]"
           autoPlay
@@ -111,7 +120,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           src="/videos/case-study3.mp4"
           style={{ maxWidth: 'inherit', maxHeight: 'inherit' }}
           onCanPlay={(e) => {
-            e.currentTarget.play().catch(() => {})
+            e.currentTarget.play().catch(() => { })
           }}
         />
         <h3
@@ -143,7 +152,10 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           Fashion Design UAE
         </h3>
       </div>
-      <div className="w-7/12">
+      <div className="w-7/12 relative">
+        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+          Branding, Website
+        </div>
         <video
           className="w-full mb-[24px]"
           autoPlay
@@ -154,7 +166,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           src="/videos/case-study4.mp4"
           style={{ maxWidth: 'inherit', maxHeight: 'inherit' }}
           onCanPlay={(e) => {
-            e.currentTarget.play().catch(() => {})
+            e.currentTarget.play().catch(() => { })
           }}
         />
         <h3
@@ -190,7 +202,10 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
 
     // Slide 3
     <div key={2} className="w-full flex justify-between items-start gap-[32px] px-8 py-16">
-      <div className="w-7/12">
+      <div className="w-7/12 relative">
+        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+          Branding, Website
+        </div>
         <video
           className="w-full mb-[24px]"
           autoPlay
@@ -201,7 +216,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           src="/videos/case-study5.mp4"
           style={{ maxWidth: 'inherit', maxHeight: 'inherit' }}
           onCanPlay={(e) => {
-            e.currentTarget.play().catch(() => {})
+            e.currentTarget.play().catch(() => { })
           }}
         />
         <h3
@@ -233,7 +248,10 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           Fashion Design UAE
         </h3>
       </div>
-      <div className="w-5/12">
+      <div className="w-5/12 relative">
+        <div className=" bg-black text-white p-2 absolute -top-3 left-0">
+          Branding, Website
+        </div>
         <video
           className="w-full mb-[24px]"
           autoPlay
@@ -244,7 +262,7 @@ const SlideContent = ({ slideIndex }: { slideIndex: number }) => {
           src="/videos/case-study6.mp4"
           style={{ maxWidth: 'inherit', maxHeight: 'inherit' }}
           onCanPlay={(e) => {
-            e.currentTarget.play().catch(() => {})
+            e.currentTarget.play().catch(() => { })
           }}
         />
         <h3
@@ -430,7 +448,7 @@ const ScrollShaderSlider = () => {
   const [textures, setTextures] = useState<THREE.Texture[]>([])
   const [isClient, setIsClient] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  
+
   const slideRefs = useRef<(HTMLDivElement | null)[]>([])
   const videoRefs = useRef<HTMLVideoElement[]>([])
   const slideCount = 3
@@ -497,10 +515,10 @@ const ScrollShaderSlider = () => {
         texture.wrapT = THREE.ClampToEdgeWrapping
         texture.flipY = true
         texture.generateMipmaps = false
-        
+
         // Dispose of canvas to free memory
         canvas.remove()
-        
+
         resolve(texture)
       } catch (error) {
         console.error('Error converting HTML to texture:', error)
@@ -516,7 +534,7 @@ const ScrollShaderSlider = () => {
     const captureSlides = async () => {
       setIsLoading(true)
       const capturedTextures: THREE.Texture[] = []
-      
+
       // Reduced initial wait time
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
@@ -547,7 +565,7 @@ const ScrollShaderSlider = () => {
               fallbackTexture.magFilter = THREE.LinearFilter
               fallbackTexture.flipY = true
               capturedTextures[i] = fallbackTexture
-              
+
               // Dispose of canvas
               canvas.remove()
             }
@@ -614,7 +632,7 @@ const ScrollShaderSlider = () => {
         video.load()
       })
       videoRefs.current = []
-      
+
       // Dispose textures to free memory
       textures.forEach(texture => {
         if (texture) texture.dispose()
@@ -665,11 +683,11 @@ const ScrollShaderSlider = () => {
               <div className="text-white text-xl">Preparing slides...</div>
             </div>
           ) : (
-            <Canvas 
+            <Canvas
               camera={{ fov: 75, position: [0, 0, 5] }}
-              gl={{ 
-                antialias: true, 
-                alpha: true, 
+              gl={{
+                antialias: true,
+                alpha: true,
                 powerPreference: 'high-performance',
                 stencil: false,
                 depth: false
