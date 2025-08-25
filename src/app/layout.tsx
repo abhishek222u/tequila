@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import LenisProvider from '@/component/SmoothScrollProvider'
 import Header from '@/component/Header'
 import Footer from '@/component/Footer'
+import SplashCursor from '@/component/SplashCursor'
 
 // export const metadata: Metadata = {
 //   title: 'Tequila',
@@ -57,6 +58,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
+      <SplashCursor />
         <Link href={'/'} className="fixed bottom-12 right-12 z-[9999]">
           <svg viewBox="0 0 99 101" fill="none" className="w-[100px]">
             <path
