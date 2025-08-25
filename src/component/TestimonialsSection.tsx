@@ -443,7 +443,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = () => {
                 </div>
 
                 {/* Navigation Arrows */}
-                <div className="absolute bottom-[-60px] right-8 flex items-center gap-4 z-10 sm:bottom-12 sm:right-12 animate-fade-in">
+                <div className="absolute !bottom-[-60px] right-8 flex items-center gap-4 z-10 sm:bottom-12 sm:right-12 animate-fade-in">
                     <button
                         onClick={scrollLeft}
                         className="w-12 h-12  flex items-center justify-center transition-all duration-500 group cursor-pointer"

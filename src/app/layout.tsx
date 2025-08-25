@@ -57,7 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <Link href={'/'} className="fixed bottom-12 right-12">
+        <Link href={'/'} className="fixed bottom-12 right-12 z-[9999]">
           <svg viewBox="0 0 99 101" fill="none" className="w-[100px]">
             <path
               d="M9.92225 81.2718L14.4653 75.1875L14.4306 75.1435L7.5538 78.2721L6.85107 77.3821L15.1702 73.6855L16.0465 74.7953L11.6561 80.5985L11.6908 80.6425L18.3802 77.751L19.2478 78.8498L13.7222 86.0845L12.9934 85.1615L17.5839 79.1824L17.5492 79.1385L10.625 82.1618L9.92225 81.2718Z"

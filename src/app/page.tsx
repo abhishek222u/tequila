@@ -84,6 +84,68 @@ export default function Home() {
     }
   }, [])
 
+  // Scroll animation for diagonal banner using GSAP
+  useEffect(() => {
+    const banner = document.getElementById('scrollBanner');
+    if (!banner) return;
+    
+    let lastScrollY = window.scrollY;
+    let currentTranslateX = 0;
+    
+    // Create GSAP timeline for smooth animations
+    const tl = gsap.timeline({ paused: true });
+    
+    const updateBannerPosition = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+      const scrollDistance = Math.abs(currentScrollY - lastScrollY);
+      
+      // Use GSAP for smooth movement
+      const movementMultiplier = 0.3;
+      const actualDistance = scrollDistance * movementMultiplier;
+      
+      if (scrollDirection === 'down') {
+        // Move text opposite to scroll direction (down = left)
+        currentTranslateX -= actualDistance;
+      } else {
+        // Move text opposite to scroll direction (up = right)
+        currentTranslateX += actualDistance;
+      }
+      
+      // Keep text within boundaries
+      currentTranslateX = Math.max(-150, Math.min(150, currentTranslateX));
+      
+      // Use GSAP to animate the transform smoothly
+      gsap.to(banner, {
+        duration: 0.3,
+        ease: "power2.out",
+        transform: `translateX(${currentTranslateX}px) rotate(-8deg)`
+      });
+      
+      lastScrollY = currentScrollY;
+    };
+
+    // Throttled scroll handler for performance
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateBannerPosition();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      // Kill GSAP animations on cleanup
+      gsap.killTweensOf(banner);
+    };
+  }, []);
+
   return (
     <>
       <main>
@@ -781,8 +843,8 @@ export default function Home() {
                           className="pt-[20px] pb-[14px] flex justify-between items-center gap-[32px] cursor-pointer group"
                           style={{
                             transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                            color: openFaq === index ? '#000000' : 'inherit',
-                            backgroundColor: openFaq === index ? '#ffffff' : 'transparent',
+                            color: openFaq === index ? '#ffffff' : 'inherit',
+                            backgroundColor: openFaq === index ? 'transparent' : 'transparent',
                             transform: openFaq === index ? 'translateX(6px)' : 'translateX(0px)'
                           }}
                           onMouseEnter={(e) => {
@@ -797,6 +859,11 @@ export default function Home() {
                               e.currentTarget.style.transform = 'translateX(0px)'
                               e.currentTarget.style.color = 'inherit'
                               e.currentTarget.style.backgroundColor = 'transparent'
+                            } else {
+                              // When FAQ is open, ensure it stays in open state
+                              e.currentTarget.style.transform = 'translateX(6px)'
+                              e.currentTarget.style.color = '#ffffff'
+                              e.currentTarget.style.backgroundColor = 'transparent'
                             }
                           }}
                           onClick={() => setOpenFaq(openFaq === index ? null : index)}
@@ -804,7 +871,7 @@ export default function Home() {
                           <p
                             className="tq__FoundersGrotesk_16 w-full"
                             style={{
-                              color: openFaq === index ? '#000000' : 'inherit',
+                              color: openFaq === index ? '#ffffff' : 'inherit',
                               transition: 'color 0.3s ease'
                             }}
                           >
@@ -1013,8 +1080,46 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-screen">
-          <video
+        <section className="w-screen h-[80vh] mt-[250px]">
+          {/* Diagonal Banner with Scroll Animation */}
+          <div className="relative w-screen h-24 overflow-hidden bg-yellow-400 transform -skew-y-8 py-6 -my-16">
+            <div className="transform skew-y-8 flex items-center justify-center h-full">
+              <div 
+                id="scrollBanner"
+                className="whitespace-nowrap text-black font-bold text-2xl md:text-3xl lg:text-4xl"
+                style={{
+                  transform: 'translateX(0) rotate(-8deg)',
+                }}
+              >
+                <span className="inline-block mx-8">
+                  WE ❤️ TO EMPOWER BRANDS
+                </span>
+                <span className="inline-block mx-8">
+                  WE ❤️ TO EMPOWER BRANDS
+                </span>
+                <span className="inline-block mx-8">
+                  WE ❤️ TO EMPOWER BRANDS
+                </span>
+                <span className="inline-block mx-8">
+                  WE ❤️ TO EMPOWER BRANDS
+                </span>
+                <span className="inline-block mx-8">
+                  WE ❤️ TO EMPOWER BRANDS
+                </span>
+                <span className="inline-block mx-8">
+                  WE ❤️ TO EMPOWER BRANDS
+                </span>
+                <span className="inline-block mx-8">
+                  WE ❤️ TO EMPOWER BRANDS
+                </span>
+                <span className="inline-block mx-8">
+                  WE ❤️ TO EMPOWER BRANDS
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          {/* <video
             className="w-screen object-cover -z-1"
             autoPlay
             muted
@@ -1022,8 +1127,10 @@ export default function Home() {
             playsInline
             src="/videos/scrolling-bar.mp4"
             style={{ maxWidth: 'inherit', maxHeight: 'inherit' }}
-          />
+          /> */}
+          
         </section>
+
         <section className="pt-[150px] relative">
           <div className="container m-auto">
             <ScrollReveal delay={0.2}>
