@@ -73,6 +73,8 @@
 :root {
   --background: #000000;
   --foreground: #f9f8fc;
+  --background-rgb: 0, 0, 0;
+  --foreground-rgb: 249, 248, 252;
 }
 /* Performance optimizations for smooth animations */
 * {
@@ -97,6 +99,40 @@
   -webkit-transform: translateZ(0);
   perspective: 1000px;
   transform-style: preserve-3d;
+}
+
+/* Diagonal Banner Scroll Animations */
+@keyframes scrollBanner {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.scroll-banner-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-banner-text {
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+}
+
+/* Scroll-based animation classes */
+.scroll-left {
+  transform: translateX(-100px);
+}
+
+.scroll-right {
+  transform: translateX(100px);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
 }
 
 /* Optimize GPU acceleration for smooth animations */
@@ -282,8 +318,8 @@ button.tq__button,
   font-weight: 500 !important;
   /* padding: 16px 32px !important; */
   background: transparent !important;
-  border: 2px solid white !important;
-  color: white !important;
+  border: 2px solid var(--foreground) !important;
+  color: var(--foreground) !important;
   border-radius: 9999px !important;
   position: relative !important;
   cursor: pointer !important;
@@ -329,7 +365,7 @@ button.tq__button,
 .tq__button__fill-bg {
   position: absolute !important;
   inset: 0 !important;
-  background: white !important;
+  background: var(--foreground) !important;
   transform: scaleX(0) !important;
   transform-origin: left !important;
   transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
@@ -342,18 +378,18 @@ button.tq__button,
   -webkit-backface-visibility: hidden;
   
   /* Add subtle gradient for modern look */
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+  background: linear-gradient(135deg, var(--foreground) 0%, var(--foreground) 100%) !important;
 }
 
 /* Hover Effects */
 .tq__button:hover {
-  border-color: white !important;
+  border-color: var(--foreground) !important;
   box-shadow: 0 15px 35px rgba(255, 255, 255, 0.25), 0 5px 15px rgba(0, 0, 0, 0.1) !important;
   transform: translateY(-3px) scale(1.02) !important;
 }
 
 .tq__button:hover .tq__button__text {
-  color: black !important;
+  color: var(--background) !important;
   transform: scale(1.05) !important;
 }
 
@@ -371,13 +407,13 @@ button.tq__button,
 /* Focus State for Accessibility */
 .tq__button:focus {
   outline: none !important;
-  box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 0 0 2px var(--foreground), 0 0 0 4px rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Enhanced focus-visible for modern browsers */
 .tq__button:focus-visible {
   outline: none !important;
-  box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 0 0 2px var(--foreground), 0 0 0 4px rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Add subtle border glow effect */
@@ -399,7 +435,7 @@ button.tq__button,
 .header-blur-background {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  background-color: rgba(0, 0, 0, 0.09);
+  background-color: rgba(var(--background-rgb), 0.09);
   @apply fixed top-0 left-0 w-full h-screen -z-1;
 }
 
@@ -419,7 +455,7 @@ button.tq__button,
   @apply text-center;
 }
 .navbar ul li a {
-  @apply inline-block py-6 px-5 w-full;
+  @apply inline-block py-3 px-5 w-full;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   overflow: hidden;
